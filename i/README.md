@@ -12,7 +12,7 @@
 - 	- [Executing via Optimail](#trigger-optimail)
 	- [Executing via Optimove APIs](#trigger-api)
 
-
+<br>
 
 # <a id="Introduction"></a>Introduction
 Marketers use the [Optimove Relationship Marketing Hub](https://www.optimove.com/product) to automate the execution of highly-personalized customer communications. Optimove offers its clients an efficient way to report data from their websites and trigger campaigns accordingly.
@@ -24,6 +24,7 @@ This guide will show you how to setup the iOS (Swift) SDK in order to:
 
 The SDK is supported by iOS native applications.
 
+<br>
 
 # <a id="iOS SDK Setup"></a>iOS (Swift) SDK Setup
 Use the Basic Setup (required) in order to:
@@ -110,6 +111,7 @@ The Optimove iOS SDK is dependent upon the Firebase iOS SDK. If your app already
 |----------------------|-----------------------|----------------------------|----------------------|
 | 1.0.4.3              | 4.8.0                 | 2.0.8                      | 2.3.1                |
 
+<br>
 
 **State Registration**
 
@@ -138,6 +140,7 @@ class AppDelegate: UIResponder,
 ```
 Do not forget to implement the _`OptimoveStateDelegate`_ methods, and provide a unique Int id to any enitity that conform to the protocol.
 
+<br>
 
 ## <a id="Advanced Setup"></a>Advanced Setup
 
@@ -146,6 +149,7 @@ As described in [Reporting Custom Events](https://github.com/optimove-tech/SDK-C
 
 >**Note**: You can deploy the basic setup, followed by adding the advanced setup at a later stage. The Basic Setup is a pre-requisite.
 
+<br>
 
 # <a id="Track"></a>Track
 
@@ -165,7 +169,7 @@ Optimove.sharedInstance.set(userId:)
  >- Due to its high importance, `set (userId:)` may be called at any time, regardless of the SDK’s state
 > - If you will be sending encrypted userId, please follow the steps in [Reporting encrypted CustomerIDs](https://github.com/optimove-tech/Reporting-Encrypted-CustomerID)
  
-
+<br>
 
 ## <a id="Tracking a Screen Visit"></a>Tracking a Screen Visit Event
 
@@ -176,7 +180,7 @@ Optimove.sharedInstance.setScreenEvent(viewControllersIdentifiers:url)
 ````
 The `viewControllersIdentifiers` argument should include an array that represents the path to the current screen. To support more complex view hierarchies, you may also specify a screen URL in the second parameter.
 
-
+<br>
 
 ## Reporting Custom Events
 
@@ -210,7 +214,7 @@ Optimove.sharedInstance.reportEvent(event: MyCustomEvent())
  >- Events use snake_case as a naming convention. Separate each word with one underscore character (_) and no spaces. (e.g., Checkout_Completed)
  >- The usage of the `reportEvent` function depends on your needs. This function may include a completion handler that will be called once the report has finished. The default value for this argument is nil.
 
-
+<br>
 
 # <a id="Trigger"></a>Trigger
 
@@ -218,7 +222,6 @@ Optimove.sharedInstance.reportEvent(event: MyCustomEvent())
 Ability to execute Realtime campaigns using Optimove’s Optimail email service provider (ESP) add-on product - **Coming Soon**.
 
 For more information on how to add Optimail to your account, please contact your CSM or your Optimove point of contact.
-
 
 ## <a id="trigger-api"></a>Executing via Optimove APIs
 Ability to execute Realtime campaigns for mobile native app using Optimove’s APIs -**Coming Soon**
