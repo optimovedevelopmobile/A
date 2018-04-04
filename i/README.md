@@ -1,4 +1,5 @@
 
+
 -   [Introduction](#Introduction)
 -   [iOS SDK Setup](#iOS%20SDK%20Setup)
 	- [Basic Setup](#Basic%20Setup)
@@ -12,6 +13,7 @@
 	- [Executing via Optimove APIs](#trigger-api)
 
 
+
 # <a id="Introduction"></a>Introduction
 Marketers use the [Optimove Relationship Marketing Hub](https://www.optimove.com/product) to automate the execution of highly-personalized customer communications. Optimove offers its clients an efficient way to report data from their websites and trigger campaigns accordingly.
 
@@ -22,6 +24,7 @@ This guide will show you how to setup the iOS (Swift) SDK in order to:
 
 The SDK is supported by iOS native applications.
 
+
 # <a id="iOS SDK Setup"></a>iOS (Swift) SDK Setup
 Use the Basic Setup (required) in order to:
 
@@ -31,7 +34,7 @@ Use the Basic Setup (required) in order to:
 ## <a id="Basic Setup"></a>Basic Setup
 
 
-**1. Request a Mobile SDK from Optimove**
+### **1. Request a Mobile SDK from Optimove**
 
 Before implementing the Optimove Track & Trigger to report visitor / customer activities or perform other functions ([OptiPush](https://github.com/optimove-tech/A/blob/master/O/O.md)), you will need to contact your Optimove Customer Success Manager (CSM) or Optimove point of contact and send the below details with a request for your Tenant and Mobile SDK configuration details in order incorporate into your iOS app.
 
@@ -52,7 +55,8 @@ Enable push notifications and remote notification capabilities in your project (
  
 For additional technical details, please use our [iOS GitHub repository](https://github.com/optimoveintegrationmobile/ios-sdk).
 
-**2. Setting Up the iOS SDK**
+
+### **2. Setting Up the iOS SDK**
 
 Optimove SDK for iOS is provided as a group of files within a folder named, 'OptimoveSDK'. This folder can be found in this GitHub repository. To install the SDK, drag this folder into your project. If not all files inside the folder are members of the target application, add them.
 
@@ -106,6 +110,7 @@ The Optimove iOS SDK is dependent upon the Firebase iOS SDK. If your app already
 |----------------------|-----------------------|----------------------------|----------------------|
 | 1.0.4.3              | 4.8.0                 | 2.0.8                      | 2.3.1                |
 
+
 **State Registration**
 
 The SDK initialization process occurs asynchronously, off the `Main Thread`.
@@ -133,12 +138,14 @@ class AppDelegate: UIResponder,
 ```
 Do not forget to implement the _`OptimoveStateDelegate`_ methods, and provide a unique Int id to any enitity that conform to the protocol.
 
+
 ## <a id="Advanced Setup"></a>Advanced Setup
 
 Use the Advanced Setup (optional) in order to track visitor and customer customized actions and events.
 As described in [Reporting Custom Events](https://github.com/optimove-tech/SDK-Custom-Events-for-Your-Vertical), this step requires collaboration between you and Optimove’s Integration Team. Please contact your Optimove Customer Success Manager (CSM) or Optimove point of contact to schedule a meeting with the Product Integration team.
 
 >**Note**: You can deploy the basic setup, followed by adding the advanced setup at a later stage. The Basic Setup is a pre-requisite.
+
 
 # <a id="Track"></a>Track
 
@@ -159,6 +166,7 @@ Optimove.sharedInstance.set(userId:)
 > - If you will be sending encrypted userId, please follow the steps in [Reporting encrypted CustomerIDs](https://github.com/optimove-tech/Reporting-Encrypted-CustomerID)
  
 
+
 ## <a id="Tracking a Screen Visit"></a>Tracking a Screen Visit Event
 
 To track which screens the user has visited in your app, send a *setScreenEvent* message to the shared Optimove instance:
@@ -167,6 +175,8 @@ To track which screens the user has visited in your app, send a *setScreenEvent*
 Optimove.sharedInstance.setScreenEvent(viewControllersIdentifiers:url)
 ````
 The `viewControllersIdentifiers` argument should include an array that represents the path to the current screen. To support more complex view hierarchies, you may also specify a screen URL in the second parameter.
+
+
 
 ## Reporting Custom Events
 
@@ -201,6 +211,7 @@ Optimove.sharedInstance.reportEvent(event: MyCustomEvent())
  >- The usage of the `reportEvent` function depends on your needs. This function may include a completion handler that will be called once the report has finished. The default value for this argument is nil.
 
 
+
 # <a id="Trigger"></a>Trigger
 
 ## <a id="trigger-optimail"></a>Executing via Optimail
@@ -208,10 +219,10 @@ Ability to execute Realtime campaigns using Optimove’s Optimail email service 
 
 For more information on how to add Optimail to your account, please contact your CSM or your Optimove point of contact.
 
+
 ## <a id="trigger-api"></a>Executing via Optimove APIs
 Ability to execute Realtime campaigns for mobile native app using Optimove’s APIs -**Coming Soon**
 
 For more information on how to acquire an API key to use Optimove APIs, please request one from your CSM or your Optimove point of contact.
-
 
 
