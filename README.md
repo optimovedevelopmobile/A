@@ -2,8 +2,9 @@ Marketers use the [Optimove Relationship Marketing Hub](https://www.optimove.com
 
 This guide will show you how to setup the Mobile SDK in order to:
 
--   Tracking visitor and customer actions and events
+-   Track visitor and customer actions and events
 -   Trigger Realtime campaigns 
+-   Execute Push Notifications ([Optipush](https://github.com/optimove-tech/A/blob/master/O/O.md))
 
 The Mobile SDK is supported by Android/iOS Native Applications only.
 
