@@ -187,7 +187,7 @@ You will also need to include the following steps to complete the basic setup:
  - Reporting User Activities and Events
  - [Linking App Visitors to Registered User IDs](#Linking%20Visitors%20to%20Users)
 <br>
-##<a id="Advanced Setup"></a>Advanced Setup
+## <a id="Advanced Setup"></a>Advanced Setup
 
 Use the Advanced Setup (optional) in order to track visitor and customer customized actions and events.
 As described in [Reporting Custom Events](https://github.com/optimove-tech/SDK-Custom-Events-for-Your-Vertical), this step requires collaboration between you and Optimove’s Integration Team. Please contact your Optimove Customer Success Manager (CSM) or Optimove point of contact to schedule a meeting with the Product Integration team.
