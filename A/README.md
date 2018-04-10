@@ -22,7 +22,8 @@ This guide will show you how to setup the Android SDK in order to:
  - Track visitor and customer actions and events
  - Trigger Realtime campaigns
 
-The SDK is supported by Android native applications.
+The SDK is supported by Android native applications.<br>
+The SDK supports a **minimum version of Android 4.4**
 
 <br>
 
