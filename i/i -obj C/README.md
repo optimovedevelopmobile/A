@@ -20,7 +20,8 @@ This guide will show you how to setup the iOS (Swift) SDK in order to:
  - Track visitor and customer actions and events
  - Trigger Realtime campaigns
 
-The SDK is supported by iOS native applications.
+The SDK is supported by iOS native applications.<br>
+The SDK supports a **minimum version of iOS 10.0**
 
 <br>
 
