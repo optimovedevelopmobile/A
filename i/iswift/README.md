@@ -1,5 +1,4 @@
 
-
 -   [Introduction](#Introduction)
 -   [iOS SDK Setup](#iOS%20SDK%20Setup)
 	- [Basic Setup](#Basic%20Setup)
@@ -23,6 +22,7 @@ This guide will show you how to setup the iOS (Swift) SDK in order to:
  - Trigger Realtime campaigns
 
 The SDK is supported by iOS native applications.
+The SDK supports a **minimum version of iOS 10.0** 
 
 <br>
 
