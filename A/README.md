@@ -1,12 +1,10 @@
 
-
--   [Introduction](#Introduction)
--   [Android SDK Setup](#Android%20SDK%20Setup)
-	- [Basic Setup](#Basic%20Setup)
-	- [Advanced Setup](#Advanced%20Setup)
+-  [Introduction](#Introduction)
+ - [Basic Setup](#Basic%20Setup)
+ - [Advanced Setup](#Advanced%20Setup)
 -   [Track](#Track)
-	-   [Linking App Visitors to Registered User IDs](#Linking%20Visitors%20to%20Users)
-	-   [Tracking a Screen Visit Event](#Tracking%20a%20Screen%20Visit)
+	-   [Linking App Visitors to Registered Customer IDs](#Linking%20Visitors%20to%20Users)
+	-   [Tracking Screen Visits](#Tracking%20a%20Screen%20Visit)
 	-   [Reporting Custom Events](https://docs.optimove.com/optimove-sdk/#Web_Reporting_Events)
 -   [Trigger](#Trigger)
  	- [Executing via Optimail](#trigger-optimail)
@@ -27,56 +25,70 @@ The SDK supports a **minimum version of Android 4.4**
 
 <br>
 
-# <a id="Android SDK Setup"></a>Android SDK Setup
-Use the Basic Setup (required) in order to:
-
- - Track visitor and customer actions and events
- - Execute Push Notifications ([OptiPush](https://github.com/optimove-tech/A/blob/master/O/O.md))
-
-## <a id="Basic Setup"></a>Basic Setup
+# <a id="Basic Setup"></a>Basic Setup
 
 
-### **1. Request a Mobile SDK from Optimove**
+## **Request a Mobile SDK from Optimove**
 
-Before implementing the Optimove Track & Trigger to report visitor / customer activities or perform other functions ([OptiPush](https://github.com/optimove-tech/A/blob/master/O/O.md)), you will need to contact your Optimove Customer Success Manager (CSM) or Optimove point of contact and send the below details with a request for your Tenant and Mobile SDK configuration details in order incorporate into your Android app.
+Before implementing the Optimove Track & Trigger to report visitor / customer activities or perform other functions ([OptiPush](https://github.com/optimove-tech/A/blob/master/O/O.md)), you will need to contact your Optimove Customer Success Manager (CSM) or Optimove point of contact.
 
-Send the following information with your request: 
-1.	The app's package
-2.	The SHA256 cert fingerprint (can be retrieved using: `keytool -list -v -keystore my-release-key.keystore`)
+To get started, please follow the below instructions:
 
-Receive a *tenant_information_suite* from the Optimove Integration Team that contains: 
-1.	**End-point URL** – The URL where the tenant configurations reside
-2.	**Unique Optimove token** – The actual token, unique per tenant
-3.	**Configuration name** – The version of the desired configuration
+### First, meet the following Pre-Requisites: <br>
+1.  The app's **min (Android) SDK version is 19** 
+2.  The hosting application uses **Firebase**. 
+The _Optimove Android SDK_ is dependent upon the _Firebase Android SDK_.
+If your application already uses **_Firebase SDK_** or has a dependency with **_Firebase SDK_**, a build conflict might occur, and even **Runtime Exception**, due to backwards compatibility issues.<br>
+Therefore, it is highly recommended to match the application's **_Firebase SDK version_** to Optimove's **_Firebase SDK version_** as detailed in the following table.
 
-For additional technical details, please use our [Android GitHub repository](https://github.com/optimoveintegrationmobile/android-sdk).
+| Optimove SDK Version | Firebase SDK Version |
+| -------------------- | -------------------- |
+| 1.1.0                | 11.8.0               |
 
 
-### **2. Add the Optimove Repository to Your Project**
+<br>
 
-1.  Open the project’s `build.gradle` file (located under the application’s root folder).
-2.  Under `allprojects`, locate the `repositories` object.
-3.  Add the **optimove-sdk** repository:
+### Second, send your Android app details: <br>
 
+Send the following information to your CSM or Optimove POC with your request for your Mobile SDK configuration details in order to incorporate into your Android app :<br>
+1.	***App's package(s)*** (If you are using multiple apps for development/testing purposes, please provide a list of all package names being used for all environments.)
+2.	***SHA256 cert fingerprint*** (can be retrieved using: `keytool -list -v -keystore my-release-key.keystore`)
+
+### **Third**, receive *tenant_information_suite* details:
+After providing the info above, you will receive a *tenant_information_suite* from the Optimove Product Integration Team that contains:<br>
+1.	***End-point URL*** – The URL where the tenant configurations reside
+2.	***Unique Optimove token*** – The actual token, unique per tenant
+3.	***Configuration name*** – The version of the desired configuration
+
+
+For a demo application containing the Android SDK, please use our [Android GitHub repository](https://github.com/optimove-tech/Android-SDK-Integration-Guide/tree/master/example-app).
+
+## **Setting Up the Android SDK**
+
+
+### **1. Add the Optimove Repository to Your Project**
+
+1. Open the **project's** `build.gradle` file (located under the application's _root folder_).
+2. Under `allprojects`, locate the `repositories` object.
+3. Add the **_optimove-sdk_** repository:
 ```javascript
 maven {
   url  "https://mobiussolutionsltd.bintray.com/optimove-sdk"
 }
 ```
-### **3. Download the SDK**
+### **2. Download the SDK**
 
-1.	Open the app’s `build.gradle` file (located under the application’s app module folder).
-2.	Under `dependencies`, add the following:
-
+1. Open the **app's** `build.gradle` file (located under the application's _app module folder_).
+2. Under `dependencies`, add the following:
 ```javascript
-compile 'com.optimove.sdk:optimove-sdk:1.0.0'
+implementation 'com.optimove.sdk:optimove-sdk:1.1.0'
 ```
-### **4. Run the SDK**
+### **3. Run the SDK**
 
->**Note**: Skip this step if the application already has a working subclass of the `Application` object.
 
-Create a new subclass of `Application` and override the `onCreate` method. Then, add the new object’s name to the ***manifest*** under the `application` ***tag*** as the `name` ***attribute***:
+> Skip this part if the application already has a working subclass of the `Application` object.
 
+Create a new subclass of `Application` and override the `onCreate` method. Finally add the new object's name to the **_manifest_** under the `application` **_tag_** as the `name` **_attribute_**.
 ```java
 public class MyApplication extends Application {
 
@@ -95,10 +107,8 @@ public class MyApplication extends Application {
 </application>
 ```
 ___
-Using the provided Tenant token, a `Context` instance and a flag indicating whether the hosting application has its own **_Firebase SDK_** create a new `TenantInfo` object, initialize the `Optimove` singleton via `Optimove.configure`. 
-<br>
-The initialization must be called *as soon as possible*, preferably after the call to `super.onCreate()` in the `onCreate` callback.
 
+Using the provided **_Tenant token_**, a `Context` instance and a flag indicating whether the hosting application has its own **_Firebase SDK_** create a new `TenantInfo` object, initialize the `Optimove` singleton via `Optimove.configure`. The initialization must be called **as soon as possible**, preferably after the call to `super.onCreate()` in the `onCreate` callback.
 ```java
 public class MyApplication extends Application {
 
@@ -106,7 +116,7 @@ public class MyApplication extends Application {
   public void onCreate() {
 
     super.onCreate();
-    TenantInfo tenantInfo = new TenantInfo("https://optimove.mobile.demo/sdk-configs/", //The initEndPointUrl
+    TenantInfo tenantInfo = new TenantInfo("https://optimove.mobile.demo/", //The initEndPointUrl
                                               "abcdefg12345678", //The token
                                               "myapp.android.1.0.0", //The config name
                                               false); //Has Firebase
@@ -114,18 +124,10 @@ public class MyApplication extends Application {
   }
 }
 ```
-### **5. Important Installation and Usage Notes**
-If Your App Already Uses Firebase
+### **4. Important Installation and Usage Notes** <br>
+1. If your app already uses **Firebase**, use *Multiple FirebaseMessagingServices*:
 
-The Optimove SDK for Android is dependent upon the Firebase Android SDK. If your app already uses Firebase SDK or has a dependency with Firebase SDK, a build conflict or runtime exception may occur, due to backward compatibility issues. Therefore, it is highly recommended to match the application’s Firebase SDK version to Optimove’s Firebase SDK:
-
-| Optimove SDK Version | Firebase SDK Version |
-|----------------------|----------------------|
-| 1.0.7                | 11.8.0               |
-
-Multiple FirebaseMessagingServices
-
-If your app utilizes Firebase Cloud Messaging and implements the **_`FirebaseMessagingService`_** Android's **_Service Priority_** kicks in, then, the app developer **must** explicitly call the `OptipushMessagingHandler` like this:
+	If your app utilizes Firebase Cloud Messaging and implements the **_`FirebaseMessagingService`_** Android's **_Service Priority_** kicks in, then, the app developer **must** explicitly call the `OptipushMessagingHandler` like this:
 
 ```java
 public class MyMessagingService extends FirebaseMessagingService {
@@ -141,53 +143,52 @@ Initializing the Default FirebaseApp Manually
 
 Firebase usually takes care of its own initialization. Usually when using **_Firebase_** usually takes care of its own initialization. However, there are cases in which it is desired to initialize the **_default FirebaseApp_** manually. In these special cases, be advised that calling the `Optimove.configure` before the `FirebaseApp.initializeApp` leads to a `RuntimeException` since the **_default FirebaseApp_** must be initialized before any other **_secondary FirebaseApp_**, which in this case would be triggered by the _Optimove Android SDK_.
 <br>
-**State Registration**
+
+2. **State Registration:**
+
 The SDK initialization process occurs asynchronously, off the `Main UI Thread`.<br>
-Before calling the Public API methods, make sure that the SDK has finished initialization by calling the `registerStateListener` method with an instance of `OptimoveStateListener`.<br>
->**Note**: If the object implementing the `OptimoveStateListener` is a component with a _"Lifecycle"_ (i.e. `Activity` or `Fragment`), **_always_** unregister that object at the `onStop()` callback to prevent memory leaks:<br>
+Before calling the Public API methods, make sure that the SDK has finished initialization by calling the `registerSuccessStateListener` method with an instance of `OptimoveSuccessStateListener`.<br>
+>If the object implementing the `OptimoveSuccessStateListener` is a component with a _"Lifecycle"_ (i.e. `Activity` or `Fragment`), **_always_** unregister that object at the `onStop()` callback to prevent memory leaks.<br>
 
 ```java
-public class MainActivity extends AppCompatActivity implements OptimoveStateListener {
+public class MainActivity extends AppCompatActivity implements OptimoveSuccessStateListener {
 
   @Override
   protected void onStart() {
 
     super.onStart();
-    Optimove.getInstance().registerStateListener(this);
+    Optimove.getInstance().registerSuccessStateListener(this);
   }
 
   @Override
   protected void onStop() {
 
     super.onStop();
-    Optimove.getInstance().unregisterStateListener(this);
+    Optimove.getInstance().unregisterSuccessStateListener(this);
   }
 
   @Override
-  public void onConfigurationStarted() {
-    
-  }
-
-  @Override
-  public void onConfigurationSucceed(MissingPermissions... missingPermissions) {
-
+  public void onConfigurationSucceed(OptimoveDeviceRequirement... missingPermissions) {
     //If appropriate, ask for permissions here
-    //Do any call to the Optimove SDK safely in here
-  }
-
-  @Override
-  public void onConfigurationFailed(OptimoveStateListener.Error... errors) {
-
-    Log.d("OptimoveSDK", Arrays.deepToString(errors));
+    //Do any call to the Optimove SDK safely from here on out
   }
 }
 ```
-### **6. Reporting Visitor and Customer activity**
+3. **Missing Optional Permissions:**
+	 Once the SDK has finished initializing successfully, it passes all **User Dependent missing permissions** through the `onConfigurationSucceed(OptimoveDeviceRequirement... missingPermissions)`. These permissions are important to the _user experience_ but do not block the SDK's proper operation.<br>
+These Permission are:
+* `DRAW_NOTIFICATION_OVERLAY` - Indicates that the app is not allowed to display a "_drop down_" notification banner when a new notification arrives.
+* `NOTIFICATIONS` - Indicates that the user has opted-out from the app's notification
+* `GOOGLE_PLAY_SERVICES` - Indicates that the `Google Play Services` app on the user's device is either missing or outdated 
+* `ADVERTISING_ID` - Indicates that the user has opted-out from allowing apps from accessing his/her **Advertising ID** <br>
+
+### **5. Reporting Visitor and Customer activity**
 You will also need to include the following steps to complete the basic setup:
 
  - Reporting User Activities and Events
- - [Linking App Visitors to Registered User IDs](#Linking%20Visitors%20to%20Users)
+ - [Linking App Visitors to Registered Customer IDs](#Linking%20Visitors%20to%20Users)
 <br>
+
 ## <a id="Advanced Setup"></a>Advanced Setup
 
 Use the Advanced Setup (optional) in order to track visitor and customer customized actions and events.
@@ -247,13 +248,13 @@ public class CheckoutFragment extends Fragment {
 
 Optimove clients may use the Optimove Mobile SDK to track specific customer actions and other custom events to Optimove (beyond the OOTB events such as visits). This data is used for tracking visitor and customer behavior, targeting campaigns to specific visitor and/or customer segments and triggering campaigns based on particular visitor and/or customer actions/events.
 
-Each Optimove client has a tailored set of customer actions that may be reported via the SDK. As mentioned above, you will collaborate with the Optimove Integration Team to define the particular set of custom events that your website will be able to report. This approach allows you to define any event and its associated parameters.
-
-Once you and the Optimove Integration Team have together defined the custom events supported by your app, the Integration Team will implement your particular functions within your Optimove site, while you will be responsible for implementing the `OptimoveEvent` protocol of the individual events within your app using the appropriate function calls.
-
 To see examples of Custom Events, please visit [Defining the Set of Custom Tracking Events](https://github.com/optimove-tech/SDK-Custom-Events-for-Your-Vertical) that You Will Report for more information.
 
->**Note**: While you can always add/change the custom events and parameters at a later date (by speaking with the Optimove Integration Team), only the particular custom events that you and the Optimove Integration Team have already defined together will be supported by your Optimove site.
+>**Note**: While you can always add/change the custom events and parameters at a later date (by speaking with the Optimove Product Integration Team), only the particular custom events that you and the Optimove Product Integration Team have already defined together will be supported by your Optimove site.
+
+### How to Report a Custom Event from within your Android app
+
+Once you and the Optimove Integration Team have together defined the custom events supported by your app, the Integration Team will implement your particular functions within your Optimove site, while you will be responsible for implementing the `OptimoveEvent` protocol of the individual events within your app using the appropriate function calls.
 
 This `OptimoveEvent` protocol defines two properties:
 
@@ -299,8 +300,7 @@ class MyCustomEvent implements OptimoveEvent {
   }
 }
 ```
-
-
+<br>
 >**Notes**:
 > - As already mentioned, all [custom events](https://github.com/optimove-tech/SDK-Custom-Events-for-Your-Vertical) must be pre-defined in your Tenant configurations by the Optimove Integration Team.
 > - Reporting of custom events is only supported if you have the Mobile SDK implemented.
@@ -319,6 +319,3 @@ For more information on how to add Optimail to your account, please contact your
 Ability to execute Realtime campaigns for mobile native app using Optimove’s APIs -**Coming Soon**
 
 For more information on how to acquire an API key to use Optimove APIs, please request one from your CSM or your Optimove point of contact.
-
-
-
