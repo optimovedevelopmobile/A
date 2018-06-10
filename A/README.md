@@ -130,21 +130,47 @@ public class MyApplication extends Application {
 
 ### 4. Important Installation and Usage Notes <br>
 
-1. If your app already uses **Firebase**, use ***Multiple FirebaseMessagingServices***:
+**1. Working with multiple Firebase messaging services** (Hosting  application uses Firebase)
 
-	If your app utilizes Firebase Cloud Messaging and implements the **_`FirebaseMessagingService`_** Android's **_Service Priority_** kicks in, then, the app developer **must** explicitly call the `OptipushMessagingHandler` like this:
+#### Multiple FirebaseMessagingServices:
+When the hosting app also utilizes Firebase Cloud Messaging and implements the **_`FirebaseMessagingService`_** Android's **_Service Priority_** kicks in, and Optimove SDK's own **_`FirebaseMessagingService`_** is never called. For that reason, the hosting app **must** call explicitly Optimove's `onMessageReceived` callback.<br>
+The `onMessageReceived` method returns *`true`* if the push message was intended for the **Optimove SDK**
 
 ```java
 public class MyMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        super.onMessageReceived(remoteMessage);
-        new OptipushMessagingHandler(this).onMessageReceived(remoteMessage);
+      super.onMessageReceived(remoteMessage);
+      boolean wasOptipushMessage = new OptipushMessagingHandler(this).onMessageReceived(remoteMessage);
+      if (wasOptipushMessage) {
+        // You should not attempt to present a notification at this point.
+        return;
+      }
+      // The notification was meant for the App, perform your push logic here
     }
 }
 ```
 <br>
+
+####  Multiple FirebaseInstanceIdService
+When the hosting app implements the **_`FirebaseInstanceIdService`_** Android's **_Service Priority_** kicks in, and Optimove SDK's own **_`FirebaseInstanceIdService`_** is never called. For that reason, the hosting app **must** call explicitly Optimove's `onTokenRefresh` callback.
+
+```java
+public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
+
+    @Override
+    public void onTokenRefresh() {
+        super.onTokenRefresh();
+        new FcmTokenHandler().onTokenRefresh();
+    }
+}
+```
+
+#### <br> FirebaseApp Initialization Order
+
+Usually when using **_Firebase_** it takes care of its own initialization. However, there are cases in which it is desired to initialize the **_default FirebaseApp_** manually. <br>
+In these special cases, be advised that calling the `Optimove.configure` before the `FirebaseApp.initializeApp` leads to a `RuntimeException` since the **_default FirebaseApp_** must be initialized before any other **_secondary FirebaseApp_**, which in this case would be triggered by the _Optimove Android SDK_.
 Initializing the Default FirebaseApp Manually
 
 Firebase usually takes care of its own initialization. Usually when using **_Firebase_** usually takes care of its own initialization. However, there are cases in which it is desired to initialize the **_default FirebaseApp_** manually. In these special cases, be advised that calling the `Optimove.configure` before the `FirebaseApp.initializeApp` leads to a `RuntimeException` since the **_default FirebaseApp_** must be initialized before any other **_secondary FirebaseApp_**, which in this case would be triggered by the _Optimove Android SDK_.
@@ -189,6 +215,15 @@ These Permission are:
 * `NOTIFICATIONS` - Indicates that the user has opted-out from the app's notification
 * `GOOGLE_PLAY_SERVICES` - Indicates that the `Google Play Services` app on the user's device is either missing or outdated 
 * `ADVERTISING_ID` - Indicates that the user has opted-out from allowing apps from accessing his/her **Advertising ID** <br>
+
+**4. The Hosting Application Specifies Rules for Automatic Backup** <br>
+Starting from API `23` Android offers the _Auto Backup for Apps_ feature as a way to back up and restore the user's data in the app. The Optimove SDK depends on some local files being **deleted** once the app is uninstalled.<br>
+For that reason if the hosting app also defines `android:fullBackupContent="@xml/app_backup_rules"` in the **_manifest.xml_** file, Android will raise a **merge conflict**.<br>
+Follow these steps to resolve the conflict and maintain the data integrity of the Optimove SDK:
+4. Add `tools:replace="android:fullBackupContent">` to the `application` tag
+5. Copy the content of the `optimove_backup_rules.xml` to your **_full-backup-content xml_**.
+>For more information about _Android Automatic Backup_ checkout [this Developer's Guide](https://developer.android.com/guide/topics/data/autobackup.html) article
+<br>
 
 ### 5. Reporting Visitor and Customer activity
 You will also need to include the following steps to complete the basic setup:
