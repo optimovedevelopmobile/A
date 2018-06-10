@@ -28,13 +28,13 @@ The SDK supports a **minimum version of Android 4.4**
 # <a id="Basic Setup"></a>Basic Setup
 
 
-## **Request a Mobile SDK from Optimove**
+## Request a Mobile SDK from Optimove
 
 Before implementing the Optimove Track & Trigger to report visitor / customer activities or perform other functions ([OptiPush](https://github.com/optimove-tech/A/blob/master/O/O.md)), you will need to contact your Optimove Customer Success Manager (CSM) or Optimove point of contact.
 
 To get started, please follow the below instructions:
 
-### First, meet the following Pre-Requisites: <br>
+### 1. Pre-Requisites: <br>
 1.  The app's **min (Android) SDK version is 19** 
 2.  The hosting application uses **Firebase**. 
 The _Optimove Android SDK_ is dependent upon the _Firebase Android SDK_.
@@ -48,13 +48,14 @@ Therefore, it is highly recommended to match the application's **_Firebase SDK v
 
 <br>
 
-### Second, send your Android app details: <br>
+### 2. Provide your Android app details: <br>
 
 Send the following information to your CSM or Optimove POC with your request for your Mobile SDK configuration details in order to incorporate into your Android app :<br>
 1.	***App's package(s)*** (If you are using multiple apps for development/testing purposes, please provide a list of all package names being used for all environments.)
 2.	***SHA256 cert fingerprint*** (can be retrieved using: `keytool -list -v -keystore my-release-key.keystore`)
+<br>
 
-### **Third**, receive *tenant_information_suite* details:
+### 3. Retrieve *tenant_information_suite* details:
 After providing the info above, you will receive a *tenant_information_suite* from the Optimove Product Integration Team that contains:<br>
 1.	***End-point URL*** – The URL where the tenant configurations reside
 2.	***Unique Optimove token*** – The actual token, unique per tenant
@@ -63,10 +64,10 @@ After providing the info above, you will receive a *tenant_information_suite* fr
 
 For a demo application containing the Android SDK, please use our [Android GitHub repository](https://github.com/optimove-tech/Android-SDK-Integration-Guide/tree/master/example-app).
 
-## **Setting Up the Android SDK**
+## Setting Up the Android SDK
 
 
-### **1. Add the Optimove Repository to Your Project**
+### 1. Add the Optimove Repository to Your Project
 
 1. Open the **project's** `build.gradle` file (located under the application's _root folder_).
 2. Under `allprojects`, locate the `repositories` object.
@@ -76,6 +77,8 @@ maven {
   url  "https://mobiussolutionsltd.bintray.com/optimove-sdk"
 }
 ```
+<br>
+
 ### **2. Download the SDK**
 
 1. Open the **app's** `build.gradle` file (located under the application's _app module folder_).
@@ -83,7 +86,9 @@ maven {
 ```javascript
 implementation 'com.optimove.sdk:optimove-sdk:1.1.0'
 ```
-### **3. Run the SDK**
+<br>
+
+### 3. Run the SDK
 
 
 > Skip this part if the application already has a working subclass of the `Application` object.
@@ -124,8 +129,11 @@ public class MyApplication extends Application {
   }
 }
 ```
-### **4. Important Installation and Usage Notes** <br>
-1. If your app already uses **Firebase**, use *Multiple FirebaseMessagingServices*:
+<br>
+
+### 4. Important Installation and Usage Notes <br>
+
+1. If your app already uses **Firebase**, use ***Multiple FirebaseMessagingServices***:
 
 	If your app utilizes Firebase Cloud Messaging and implements the **_`FirebaseMessagingService`_** Android's **_Service Priority_** kicks in, then, the app developer **must** explicitly call the `OptipushMessagingHandler` like this:
 
@@ -139,6 +147,7 @@ public class MyMessagingService extends FirebaseMessagingService {
     }
 }
 ```
+<br>
 Initializing the Default FirebaseApp Manually
 
 Firebase usually takes care of its own initialization. Usually when using **_Firebase_** usually takes care of its own initialization. However, there are cases in which it is desired to initialize the **_default FirebaseApp_** manually. In these special cases, be advised that calling the `Optimove.configure` before the `FirebaseApp.initializeApp` leads to a `RuntimeException` since the **_default FirebaseApp_** must be initialized before any other **_secondary FirebaseApp_**, which in this case would be triggered by the _Optimove Android SDK_.
@@ -174,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements OptimoveSuccessSt
   }
 }
 ```
+<br>
+
 3. **Missing Optional Permissions:**
 	 Once the SDK has finished initializing successfully, it passes all **User Dependent missing permissions** through the `onConfigurationSucceed(OptimoveDeviceRequirement... missingPermissions)`. These permissions are important to the _user experience_ but do not block the SDK's proper operation.<br>
 These Permission are:
@@ -182,14 +193,14 @@ These Permission are:
 * `GOOGLE_PLAY_SERVICES` - Indicates that the `Google Play Services` app on the user's device is either missing or outdated 
 * `ADVERTISING_ID` - Indicates that the user has opted-out from allowing apps from accessing his/her **Advertising ID** <br>
 
-### **5. Reporting Visitor and Customer activity**
+### 5. Reporting Visitor and Customer activity
 You will also need to include the following steps to complete the basic setup:
 
  - Reporting User Activities and Events
  - [Linking App Visitors to Registered Customer IDs](#Linking%20Visitors%20to%20Users)
 <br>
 
-## <a id="Advanced Setup"></a>Advanced Setup
+# <a id="Advanced Setup"></a>Advanced Setup
 
 Use the Advanced Setup (optional) in order to track visitor and customer customized actions and events.
 As described in [Reporting Custom Events](https://github.com/optimove-tech/SDK-Custom-Events-for-Your-Vertical), this step requires collaboration between you and Optimove’s Integration Team. Please contact your Optimove Customer Success Manager (CSM) or Optimove point of contact to schedule a meeting with the Product Integration team.
@@ -301,6 +312,7 @@ class MyCustomEvent implements OptimoveEvent {
 }
 ```
 <br>
+
 >**Notes**:
 > - As already mentioned, all [custom events](https://github.com/optimove-tech/SDK-Custom-Events-for-Your-Vertical) must be pre-defined in your Tenant configurations by the Optimove Integration Team.
 > - Reporting of custom events is only supported if you have the Mobile SDK implemented.
