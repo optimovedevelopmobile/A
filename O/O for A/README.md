@@ -20,7 +20,7 @@ _*Optipush*_ is Optimove’s mobile push notification delivery add-in module, po
 
 ## <a id="pre-reqs"></a>Pre-Requisites 
 
-### 1. [Optimove Mobile SDK for iOS](https://github.com/optimove-tech/A) implemented 
+### 1. [Optimove Mobile SDK for Android](https://github.com/optimove-tech/A) implemented 
 
 ### 2.  App uses Java 8
 Optimove's Android SDK uses the `Java 8`. If the hosting app still uses `Java 7` or `Jack` some build errors might occur. In that case migrate the app to `Java 8`. It is fast, simple and enables new and useful language features.
