@@ -28,7 +28,7 @@ This guide will show you how to setup the iOS (Objective C) SDK in order to:
 Before implementing the Optimove Track & Trigger to report visitor / customer activities or perform other functions ([OptiPush](https://github.com/optimove-tech/A/blob/master/O/O.md)), you will need to contact your Optimove Customer Success Manager (CSM) or Optimove point of contact. 
 To get started, please follow the below instructions: .
 
-### **First**, meet the following **Pre-Requisites**:<br>
+### 1. Pre-Requisites:<br>
  1. You have a paid development account for your iOS app, and valid certificates for remote notifications or APN Auth key.
  2. The app's `Deployment Target` is **at least iOS 10.0** 
  3. In order to work with the Optimove SDK for you iOS native app, you also need to download some modules from CocoaPods. </br>
@@ -54,7 +54,7 @@ In your **Podfile**, add the following:
 | 1.0.5.1              | 4.11.0                 | 2.1.1                      | 2.3.2                |
 <br>
 
-### **Second**, send your iOS app details:
+### 2. Provide your iOS app details:
 Send the following information to your CSM or Optimove POC with your request for your Mobile SDK configuration details in order to incorporate into your iOS app :<br>
 1.	***Auth key*** (with its key id) P8 format
 2.	***Bundle ID*** (If you are using multiple apps for development/testing purposes, please provide a list of all bundle IDs being used for all environments.)
@@ -62,7 +62,7 @@ Send the following information to your CSM or Optimove POC with your request for
 4.	***App Store ID*** (from itunesconnect) 
 <br>
 
-### **Third**, receive *tenant_information_suite* details:
+### 3. Retrieve *tenant_information_suite* details:
 After providing the info above, you will receive a *tenant_information_suite* from the Optimove Product Integration Team that contains:<br>
 1.	***End-point URL*** – The URL where the tenant configurations reside
 2.	***Unique Optimove token*** – The actual token, unique per tenant
@@ -74,9 +74,10 @@ For a demo application containing the iOS SDK, please use our [iOS GitHub reposi
 
 ## **Setting Up the iOS SDK**
 
-
+### 1. Install the SDK
 Optimove SDK for iOS is provided as a group of files within a folder named, 'OptimoveSDK'. This folder can be found in this [GitHub repository](https://github.com/optimove-tech/iOS-SDK-Integration-Guide/tree/master/OptimoveSDK). To install the SDK, drag this folder into your project. If not all files inside the folder are members of the target application, add them.
 
+### 2. Run the SDK
 In your `AppDelegate` class, inside the application 
 ````objective-c
 application (_: didFinishLaunchingWithOptions:)
@@ -111,10 +112,11 @@ token:@"demo\_apps" version:@"1.0.0" hasFirebase:NO\];
 ````
 
 >**Note**: The initialization must be called **as soon as possible**, unless you have your own Firebase SDK. In this case, start the initialization right after calling `FirApp configure`.
-
 <br>
 
-## State Registration
+### 3. Important Installation and Usage Notes <br>
+
+#### State Registration
 
 The SDK initialization process occurs asynchronously, off the `Main Thread`.</br>
 Before calling the Public API methods, make sure that the SDK has finished initialization by calling the _` Optimove.sharedInstance registerWithStateDelegate:`_ method with an instance of _`OptimoveStateDelegate`_.</br>
@@ -152,8 +154,13 @@ NSLog(@"did become invalid");
 Do not forget to implement the _`OptimoveStateDelegate`_ methods, and provide a unique Int id to any enitity that conform to the protocol.
 
 This Id should be a positive _*Int*_.
+<br>
+ ### 4. Reporting Visitor and Customer activity
 
+You will also need to include the following steps to complete the basic setup:
 
+ - Reporting User Activities and Events
+ - [Linking App Visitors to Registered Customer IDs](Linking%20Visitors%20to%20Users)
 <br>
 
 # <a id="Advanced Setup"></a>Advanced Setup
