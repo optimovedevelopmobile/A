@@ -218,7 +218,7 @@ Optimove.getInstance().setUserId("a-unique-user-id");
  
 <br>
 
-## <a id="Tracking a Screen Visit"></a>Tracking a Screen Visit Event
+## <a id="Tracking a Screen Visit"></a>Tracking Screen Visits
 
 To track which screens the user has visited in your app, call the `reportScreenVisit` method of the Optimove singleton. It can accept either the current `Activity` or, for more finely tuned screen hierarchy reporting, a `String` describing the Screen's hierarchy.
 
