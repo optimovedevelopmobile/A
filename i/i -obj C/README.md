@@ -6,7 +6,7 @@
 	-   [Tracking Screen Visits](#Tracking%20a%20Screen%20Visit)
 	-   [Reporting Custom Events](https://docs.optimove.com/optimove-sdk/#Web_Reporting_Events)
 -   [Trigger](#Trigger)
-- 	- [Executing via Optimail](#trigger-optimail)
+ 	- [Executing via Optimail](#trigger-optimail)
 	- [Executing via Optimove APIs](#trigger-api)
 <br>
 
