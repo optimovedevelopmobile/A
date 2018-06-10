@@ -2,7 +2,6 @@
 -  [Introduction](#Introduction)
  - [Setup](#Setup)
 	 - [Pre-Requisites](pre-reqs)
-	 - [Setting Up OptiPush](setup%20optipush)
 	 - [Deep Linking](deep%20linking)
 	 - [Enabling Test Mode](test%20mode) 
  - [Post-Setup](Post%20setup)
@@ -28,7 +27,7 @@ Enable push notifications and remote notification capabilities in your project (
  
 [![apple_dashboared.png](https://s9.postimg.cc/9ln5sfxe7/apple_dashboared.png)](https://postimg.org/image/itfe954gb/)
 
-## <a id="setup optipush"></a>Setting Up OptiPush
+### 3. Setting Up OptiPush
 
 In order for OptiPush to be able to deliver push notifications to your iOS app, Optimove SDK for iOS must receive an APN token from your app. This is accomplished by the following  steps:
 Inside the application `AppDelegate` class </br>
@@ -157,7 +156,6 @@ class ViewController: UIViewController {
 
 
 ## <a id="Optipush campaign"></a>Set up an OptiPush campaign
-
 
 
 
