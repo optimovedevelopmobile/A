@@ -27,7 +27,7 @@ This guide will show you how to setup the iOS (Swift) SDK in order to:
 ## **Request a Mobile SDK from Optimove**
 
 Before implementing the Optimove Track & Trigger to report visitor / customer activities or perform other functions ([OptiPush](https://github.com/optimove-tech/A/blob/master/O/O.md)), you will need to contact your Optimove Customer Success Manager (CSM) or Optimove point of contact. 
-To get started, please follow the below instructions: .
+To get started, please follow the below instructions: 
 
 ### **First**, meet the following **Pre-Requisites**:<br>
  1. You have a paid development account for your iOS app, and valid certificates for remote notifications or APN Auth key.
