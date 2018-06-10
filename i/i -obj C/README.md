@@ -68,7 +68,7 @@ After providing the info above, you will receive a *tenant_information_suite* fr
 2.	***Unique Optimove token*** – The actual token, unique per tenant
 3.	***Configuration name*** – The version of the desired configuration
 
-*For a demo application in Objective C that contains the mobile SDK, go [**here**](https://github.com/optimove-tech/iOS-SDK-Integration-Guide/tree/master/DemoApplication/ObjcDemoApp).** 
+For a demo application containing the iOS SDK, please use our [iOS GitHub repository](https://github.com/optimove-tech/iOS-SDK-Integration-Guide/tree/master/DemoApplication/ObjcDemoApp).
 
 <br>
 
