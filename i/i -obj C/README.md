@@ -1,4 +1,4 @@
-- [Introduction](#Introduction)
+-   [Introduction](#Introduction)
 - [Basic Setup](#Basic%20Setup)
 - [Advanced Setup](#Advanced%20Setup)
 -   [Track](#Track)
@@ -59,7 +59,8 @@ Send the following information to your CSM or Optimove POC with your request for
 1.	***Auth key*** (with its key id) P8 format
 2.	***Bundle ID*** (If you are using multiple apps for development/testing purposes, please provide a list of all bundle IDs being used for all environments.)
 3.	***Team ID*** (from apple developer dashboard)
-4.	***App Store ID*** (from itunesconnect)<br>
+4.	***App Store ID*** (from itunesconnect) 
+<br>
 
 ### **Third**, receive *tenant_information_suite* details:
 After providing the info above, you will receive a *tenant_information_suite* from the Optimove Product Integration Team that contains:<br>
@@ -69,13 +70,15 @@ After providing the info above, you will receive a *tenant_information_suite* fr
 
 *For a demo application in Objective C that contains the mobile SDK, go [**here**](https://github.com/optimove-tech/iOS-SDK-Integration-Guide/tree/master/DemoApplication/ObjcDemoApp).** 
 
+<br>
+
 ## **Setting Up the iOS SDK**
 
 
 Optimove SDK for iOS is provided as a group of files within a folder named, 'OptimoveSDK'. This folder can be found in this [GitHub repository](https://github.com/optimove-tech/iOS-SDK-Integration-Guide/tree/master/OptimoveSDK). To install the SDK, drag this folder into your project. If not all files inside the folder are members of the target application, add them.
 
 In your `AppDelegate` class, inside the application 
-````swift
+````objective-c
 application (_: didFinishLaunchingWithOptions:)
 ```` 
 method, create a new `OptimoveTenantInfo` object. This object should contain:
@@ -109,7 +112,7 @@ token:@"demo\_apps" version:@"1.0.0" hasFirebase:NO\];
 
 >**Note**: The initialization must be called **as soon as possible**, unless you have your own Firebase SDK. In this case, start the initialization right after calling `FirApp configure`.
 
-
+<br>
 
 ## State Registration
 
