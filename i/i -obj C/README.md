@@ -23,12 +23,12 @@ This guide will show you how to setup the iOS (Objective C) SDK in order to:
 ## <a id="Basic Setup"></a>Basic Setup
 
 
-### **1. Request a Mobile SDK from Optimove**
+### **Request a Mobile SDK from Optimove**
 
 Before implementing the Optimove Track & Trigger to report visitor / customer activities or perform other functions ([OptiPush](https://github.com/optimove-tech/A/blob/master/O/O.md)), you will need to contact your Optimove Customer Success Manager (CSM) or Optimove point of contact. 
 To get started, please follow the below instructions: .
 
-**First**, make sure you are meeting the following **Pre-Requisites**:<br>
+**First**, make sure you meet the following **Pre-Requisites**:<br>
  1. You have a paid development account for your iOS app, and valid certificates for remote notifications or APN Auth key.
  2. The app's `Deployment Target` is **at least iOS 10.0** 
  3. In order to work with the Optimove SDK for you iOS native app, you also need to download some modules from CocoaPods. </br>
@@ -41,34 +41,33 @@ In your **Podfile**, add the following:
     pod 'OptimovePiwikTracker'
 ````
 
->**Important**: For any Header file that uses the Optimove SDK, add an import with your module name followed by '-Swift.h', such as
->````objective-c
->#import "HelloWorld-Swift.h" 
->````
+**Important**: For any Header file that uses the Optimove SDK, add an import with your module name followed by '-Swift.h', such as
+````objective-c
+#import "HelloWorld-Swift.h" 
+````
 
-4. **If Your App Already Uses Firebase**
-
-The Optimove iOS SDK is dependent upon the Firebase iOS SDK. If your app already uses Firebase SDK or has a dependency with Firebase SDK, a build conflict or runtime exception may occur, due to backward compatibility issues. Therefore, it is highly recommended to match the application’s Firebase SDK version to Optimove’s Firebase SDK:
+4. If Your App Already Uses **Firebase**
+	The Optimove iOS SDK is dependent upon the Firebase iOS SDK. If your app already uses Firebase SDK or has a dependency with Firebase SDK, a build conflict or runtime exception may occur, due to backward compatibility issues. Therefore, it is highly recommended to match the application’s Firebase SDK version to Optimove’s Firebase SDK:
 
 | Optimove SDK Version | Firebase Core Version | Firebase Messaging Version | FirebaseDynamicLinks |
 |----------------------|-----------------------|----------------------------|----------------------|
 | 1.0.5.1              | 4.11.0                 | 2.1.1                      | 2.3.2                |
+<br>
 
 **Second**, send the following information to your CSM or Optimove POC with your request for your Mobile SDK configuration details in order to incorporate into your iOS app :<br>
-1.	Auth key (with its key id) P8 format
-2.	Bundle ID* 
-	>**Note**: If you are using multiple apps for development/testing purposes, please provide a list of all bundle IDs being used for all environments.
-3.	Team ID (from apple developer dashboard)
-4.	App Store ID (from itunesconnect)
+1.	***Auth key*** (with its key id) P8 format
+2.	***Bundle ID*** (If you are using multiple apps for development/testing purposes, please provide a list of all bundle IDs being used for all environments.)
+3.	***Team ID*** (from apple developer dashboard)
+4.	***App Store ID*** (from itunesconnect)<br>
 
 **Third**, after providing the info above, you will receive a *tenant_information_suite* from the Optimove Product Integration Team that contains:<br>
-1.	**End-point URL** – The URL where the tenant configurations reside
-2.	**Unique Optimove token** – The actual token, unique per tenant
-3.	**Configuration name** – The version of the desired configuration
+1.	***End-point URL*** – The URL where the tenant configurations reside
+2.	***Unique Optimove token*** – The actual token, unique per tenant
+3.	***Configuration name*** – The version of the desired configuration
 
-**For a demo application in Objective C that contains the mobile SDK, go [here](https://github.com/optimove-tech/iOS-SDK-Integration-Guide/tree/master/DemoApplication/ObjcDemoApp).** 
+*For a demo application in Objective C that contains the mobile SDK, go [**here**](https://github.com/optimove-tech/iOS-SDK-Integration-Guide/tree/master/DemoApplication/ObjcDemoApp).** 
 
-### **2. Setting Up the iOS SDK**
+### **Setting Up the iOS SDK**
 
 
 Optimove SDK for iOS is provided as a group of files within a folder named, 'OptimoveSDK'. This folder can be found in this [GitHub repository](https://github.com/optimove-tech/iOS-SDK-Integration-Guide/tree/master/OptimoveSDK). To install the SDK, drag this folder into your project. If not all files inside the folder are members of the target application, add them.
@@ -107,6 +106,7 @@ token:@"demo\_apps" version:@"1.0.0" hasFirebase:NO\];
 ````
 
 >**Note**: The initialization must be called **as soon as possible**, unless you have your own Firebase SDK. In this case, start the initialization right after calling `FirApp configure`.
+
 <br>
 
 ## <a id="Advanced Setup"></a>Advanced Setup
