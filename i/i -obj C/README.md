@@ -1,4 +1,4 @@
--   [Introduction](#Introduction)
+- [Introduction](#Introduction)
 - [Basic Setup](#Basic%20Setup)
 - [Advanced Setup](#Advanced%20Setup)
 -   [Track](#Track)
@@ -108,6 +108,48 @@ token:@"demo\_apps" version:@"1.0.0" hasFirebase:NO\];
 ````
 
 >**Note**: The initialization must be called **as soon as possible**, unless you have your own Firebase SDK. In this case, start the initialization right after calling `FirApp configure`.
+
+
+
+## State Registration
+
+The SDK initialization process occurs asynchronously, off the `Main Thread`.</br>
+Before calling the Public API methods, make sure that the SDK has finished initialization by calling the _` Optimove.sharedInstance registerWithStateDelegate:`_ method with an instance of _`OptimoveStateDelegate`_.</br>
+
+````objective-c
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+// Override point for customization after application launch.
+OptimoveTenantInfo *info = [[OptimoveTenantInfo alloc] initWithUrl:@"https://appcontrollerproject-developer.firebaseapp.com"
+token:@"demo_apps"
+version:@"1.0.0"
+hasFirebase:NO];
+[Optimove.sharedInstance configureWithInfo:info];
+[Optimove.sharedInstance registerWithStateDelegate:self];
+
+return YES;
+}
+
+
+@synthesize optimoveStateDelegateID;
+
+- (void)didBecomeActive {
+NSLog(@"did become active");
+}
+
+- (void)didStartLoading {
+NSLog(@"did become loading");
+}
+
+- (void)didBecomeInvalidWithErrors:(NSArray<NSNumber *> * _Nonnull)errors {
+NSLog(@"did become invalid");
+}
+````
+
+Do not forget to implement the _`OptimoveStateDelegate`_ methods, and provide a unique Int id to any enitity that conform to the protocol.
+
+This Id should be a positive _*Int*_.
+
 
 <br>
 
