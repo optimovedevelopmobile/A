@@ -173,7 +173,7 @@ Once Optimove has enabled Optipush as an execution channel for your Optimove ins
 ### Test an Optipush Template
 
 1. **Validate** - validates the push notification template to make sure all mandatory fields are completed and contain no errors. 
-2. **Send Test**  - clicking this link will send the push notification template to all devices that have the app installed with the test mode enabled.
+2. **Send Test**  - clicking this link will send the push notification template to all devices that have the app installed with the test mode enabled.<br>
 
 ## <a id="Optipush campaign"></a>Set up an Optipush campaign
 
