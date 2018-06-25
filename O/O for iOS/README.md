@@ -6,7 +6,7 @@
 	 - [Enabling Test Mode](test%20mode) 
  - [Post-Setup](Post%20setup)
 	 - [Create & test notification templates](notification%20template) 
-	 - [Set up an OptiPush campaign](Optipush%20campaign) 
+	 - [Set up an Optipush campaign](Optipush%20campaign) 
 
 
 # <a id="Introduction"></a>Introduction
@@ -23,13 +23,13 @@ _*Optipush*_ is Optimove’s mobile push notification delivery add-in module, po
 
 
 ### 2. Push Notifications Enabled 
-Enable push notifications and remote notification capabilities in your project (*this step is required only for sending push notifications using OptiPush.
+Enable push notifications and remote notification capabilities in your project (*this step is required only for sending push notifications using Optipush.
  
 [![apple_dashboared.png](https://s9.postimg.cc/9ln5sfxe7/apple_dashboared.png)](https://postimg.org/image/itfe954gb/)
 
-### 3. Setting Up OptiPush
+### 3. Setting Up Optipush
 
-In order for OptiPush to be able to deliver push notifications to your iOS app, Optimove SDK for iOS must receive an APN token from your app. This is accomplished by the following  steps:
+In order for Optipush to be able to deliver push notifications to your iOS app, Optimove SDK for iOS must receive an APN token from your app. This is accomplished by the following  steps:
 Inside the application `AppDelegate` class </br>
 
 ````swift
@@ -74,7 +74,7 @@ application(_:didReceiveRemoteNotification:fetchCompletionHandler:)
 
 ## <a id="deep linking"></a>Deep Linking
 In order to route end users back to the application from the notification, you must support *Deep Linking*.
-Other than _UI attributes_, an **_OptiPush Notification_** can contain metadata linking to a specific screen within your application, along with custom (screen specific) data. </br>
+Other than _UI attributes_, an **_Optipush Notification_** can contain metadata linking to a specific screen within your application, along with custom (screen specific) data. </br>
 
 To support deep linking, you should:
 
@@ -127,9 +127,9 @@ class ViewController: UIViewController,OptimoveDeepLinkCallback
 
 ## <a id="test mode"></a>Enabling Test Mode
  
-You can test an **OptiPush template** on your device *before* having to create an **OptiPush campaign**.
-To **enable** _"test OptiPush templates"_ on one or more devices, call the _**`Optimove.sharedInstance.subscribeToTestMode()`**_ method.</br>
-To **disable** _"test OptiPush templates"_ call  _**`Optimove.sharedInstance.unSubscribeFromTestMode()`**_.</br>
+You can test an **Optipush template** on your device *before* having to create an **Optipush campaign**.
+To **enable** _"test Optipush templates"_ on one or more devices, call the _**`Optimove.sharedInstance.subscribeToTestMode()`**_ method.</br>
+To **disable** _"test Optipush templates"_ call  _**`Optimove.sharedInstance.unSubscribeFromTestMode()`**_.</br>
 
 ````swift
 class ViewController: UIViewController {
@@ -151,12 +151,35 @@ class ViewController: UIViewController {
 
 
 ## <a id="notification template"></a>Create & Test notification templates
+Once Optimove has enabled Optipush as an execution channel for your Optimove instance, you can begin creating and testing your first Optipush template.
+>Note: In order to be able to test your templates, the test mode must be [enabled](https://github.com/optimove-tech/A/tree/master/O/O%20for%20A#enabling-test-mode) within your mobile app.<br>
 
 
+### Create  an Optipush Template
+
+ 1. Go to the Manage Templates page and choose 'Optipush' from the Channel drop-down menu.
+ 2. Enter values for the following fields:
+	 - Template Name- Name the template 
+	 - Template Title - Title of push template
+	 - Message - Message of the template
+ 3. Personalization - you can personalize the notification by adding dynamic tags and emojis to the notification.
+ >Note: Personalization tags may cause push message to be truncated at 129 characters.
+ 4. Preview - you can preview the push template notification before sending it out.
+ 5. **Deep links** - choose the app (iOS) and select the target screen in your app that you want your customers to be directed to when opening the message. 
+ >Notes:
+ >- In order to add Deep Links to the drop-down menu, please send the list of screen names to your CSM that you have configured in your app as described [here](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS#deep-linking).
+ 
+
+### Test an Optipush Template
+
+1. **Validate** - validates the push notification template to make sure all mandatory fields are completed and contain no errors. 
+2. **Send Test**  - clicking this link will send the push notification template to all devices that have the app installed with the test mode enabled.
+
+## <a id="Optipush campaign"></a>Set up an Optipush campaign
+
+### Run Campaign
 
 
-## <a id="Optipush campaign"></a>Set up an OptiPush campaign
-
-
+1. 
 
 
