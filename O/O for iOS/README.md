@@ -1,6 +1,6 @@
 
--  [Introduction](#Introduction)
- - [Setup](#Setup)
+-  [Introduction](Introduction)
+ - [Setup](Setup)
 	 - [Pre-Requisites](pre-reqs)
 	 - [Deep Linking](deep%20linking)
 	 - [Enabling Test Mode](test%20mode) 
@@ -181,5 +181,3 @@ Once Optimove has enabled Optipush as an execution channel for your Optimove ins
 
 
 1. 
-
-
