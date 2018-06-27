@@ -1,5 +1,5 @@
 
-# Executing Push Notifications (Optipush)
+# Optipush 
 
 Optipush is Optimove’s mobile push notification delivery add-in module, powering all aspects of preparing, delivering and tracking mobile push notification communications to customers, seamlessly from within Optimove.
 
