@@ -162,12 +162,16 @@ Once Optimove has enabled Optipush as an execution channel for your Optimove ins
 	 - Template Name- Name the template 
 	 - Template Title - Title of push template
 	 - Message - Message of the template
+![](https://raw.githubusercontent.com/optimove-tech/A/master/O/O%20for%20iOS/images/3.png)
+
  3. Personalization - you can personalize the notification by adding dynamic tags and emojis to the notification.
  >Note: Personalization tags may cause push message to be truncated at 129 characters.
  4. Preview - you can preview the push template notification before sending it out.
- 5. **Deep links** - choose the app (iOS) and select the target screen in your app that you want your customers to be directed to when opening the message. 
+ 5. **Deep links** (Optional) - choose the app (iOS) and select the target screen in your app that you want your customers to be directed to when opening the message. 
  >Notes:
  >- In order to add Deep Links to the drop-down menu, please send the list of screen names to your CSM that you have configured in your app as described [here](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS#deep-linking).
+ >- *If a Deep Link is not chosen, the customer will be directed to the main screen when opening the message.* 
+ >- When creating templates for Optipush, if the template is targeted for a specific device (iOS/Android), it is recommended to add the device name to the template naming convention. This way it will be identifiable when choosing a template for a campaign targeting a specific device.
  
 
 ### Test an Optipush Template
@@ -179,5 +183,12 @@ Once Optimove has enabled Optipush as an execution channel for your Optimove ins
 
 ### Run Campaign
 
+Please follow these steps in order to run a pre-scheduled campaign via execution channel **Optipush**.
+1. From the main menu go on *One-to-One Campaigns* --> click on *More* from the drop-down menu --> click on ***Run Campaign***.  
+2. Go through Steps 1 & 2 of the Run Campaign wizard as you would for any campaign.
+3. In Step 3 (Execution Details) choose from the *Channel* drop-down menu *Optipush*. This action will open the **Optipush Options** window.
+![](https://raw.githubusercontent.com/optimove-tech/A/master/O/O%20for%20iOS/images/2_a.png)
 
-1. 
+4. Choose from the *App* drop-down menu if you would like to run the campaign for your iOS app, Android app, or both by selecting the relevant box(es).
+5. Choose the relevant template for the 'Template' drop down menu that you would like the targeted audience to receive.
+6. Continue through the remaining steps of the Run Campaign wizard to schedule the campaign for your preferred dates and times.
