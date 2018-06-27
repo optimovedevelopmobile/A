@@ -185,9 +185,9 @@ Once Optimove has enabled Optipush as an execution channel for your Optimove ins
 Please follow these steps in order to run a pre-scheduled campaign via execution channel **Optipush**.
 1. From the main menu go on *One-to-One Campaigns* --> click on *More* from the drop-down menu --> click on ***Run Campaign***.  
 2. Go through Steps 1 & 2 of the Run Campaign wizard as you would for any campaign.
-3. In Step 3 (Execution Details) choose from the *Channel* drop-down menu *Optipush*. This action will open the **Optipush Options** window.
+3. In Step 3 (Execution Details) choose from the *Channel* drop-down menu *Optipush*. This action will open the **Optipush Options** window.<br>
 ![](https://raw.githubusercontent.com/optimove-tech/A/master/O/O%20for%20iOS/images/2_a.png)
 
 4. Choose from the *App* drop-down menu if you would like to run the campaign for your iOS app, Android app, or both by selecting the relevant box(es).
-5. Choose the relevant template for the 'Template' drop down menu that you would like the targeted audience to receive.
+5. Choose the relevant template for the *Template* drop down menu that you would like the targeted audience to receive.
 6. Continue through the remaining steps of the Run Campaign wizard to schedule the campaign for your preferred dates and times.
