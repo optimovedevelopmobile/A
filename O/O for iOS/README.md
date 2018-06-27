@@ -165,9 +165,8 @@ Once Optimove has enabled Optipush as an execution channel for your Optimove ins
 ![](https://raw.githubusercontent.com/optimove-tech/A/master/O/O%20for%20iOS/images/3.png)
 
  3. Personalization - you can personalize the notification by adding dynamic tags and emojis to the notification.
- >Note: Personalization tags may cause push message to be truncated at 129 characters.
  4. Preview - you can preview the push template notification before sending it out.
- 5. **Deep links** (Optional) - choose the app (iOS) and select the target screen in your app that you want your customers to be directed to when opening the message. 
+ 5. **Deep links** (Optional) - choose the app (iOS) and select the target screen in your app that you want your customers to be directed to when opening the message. <br>
  >Notes:
  >- In order to add Deep Links to the drop-down menu, please send the list of screen names to your CSM that you have configured in your app as described [here](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS#deep-linking).
  >- *If a Deep Link is not chosen, the customer will be directed to the main screen when opening the message.* 
