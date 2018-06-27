@@ -7,7 +7,7 @@
 	 - [Enabling Test Mode](test%20mode) 
  - [Post-Setup](Post%20setup)
 	 - [Create & test notification templates](notification%20template) 
-	 - [Set up an OptiPush campaign](Optipush%20campaign) 
+	 - [Set up an Optipush campaign](Optipush%20campaign) 
 
 
 # <a id="Introduction"></a>Introduction
@@ -37,9 +37,9 @@ compileOptions {
 ```
 ## <a id="deep linking"></a>Deep Linking
 
-### Setting up OptiPush Deep Linking
+### Setting up Optipush Deep Linking
 In order to route end users back to the application from the notification, you must support *Deep Linking*.
-Other than _UI attributes_, an **_OptiPush Notification_** can contain metadata that can lead the user to a specific screen within the hosting application, alongside custom (screen specific) data.<br>
+Other than _UI attributes_, an **_Optipush Notification_** can contain metadata that can lead the user to a specific screen within the hosting application, alongside custom (screen specific) data.<br>
 To support deep linking, update application's `manifest.xml` file to reflect which screen can be targeted. Each `Activity` the can be targeted must have the following _**`intent-filter`**_:
 
 ```xml
@@ -135,9 +135,9 @@ If the **_Main Activity_** (i.e. has `<intent-filter>` with `<action android:nam
 
 ## <a id="test mode"></a>Enabling Test Mode
  
-You can test an **OptiPush template** on your device *before* having to create an **OptiPush campaign**.
-To **enable** _"test OptiPush templates"_ on one or more devices, call the<br>_**`Optimove.getInstance().startTestMode(@Nullable SdkOperationListener operationListener);`**_<br>method.
-To **disable** _"test OptiPush templates"_ call the<br>_**`Optimove.getInstance().stopTestMode(@Nullable SdkOperationListener operationListener);`**_.
+You can test an **Optipush template** on your device *before* having to create an **Optipush campaign**.
+To **enable** _"test Optipush templates"_ on one or more devices, call the<br>_**`Optimove.getInstance().startTestMode(@Nullable SdkOperationListener operationListener);`**_<br>method.
+To **disable** _"test Optipush templates"_ call the<br>_**`Optimove.getInstance().stopTestMode(@Nullable SdkOperationListener operationListener);`**_.
 ```java
 public class MainActivity extends AppCompatActivity implements OptimoveSuccessStateListener {
 
@@ -175,16 +175,44 @@ public class MainActivity extends AppCompatActivity implements OptimoveSuccessSt
 # <a id="Post setup"></a>Post-Setup
 
 
-
-
 ## <a id="notification template"></a>Create & Test notification templates
+Once Optimove has enabled Optipush as an execution channel for your Optimove instance, you can begin creating and testing your first Optipush template.
+>Note: In order to be able to test your templates, the test mode must be [enabled](https://github.com/optimove-tech/A/tree/master/O/O%20for%20A#enabling-test-mode) within your mobile app.<br>
 
 
+### Create  an Optipush Template
 
+ 1. Go to the Manage Templates page and choose 'Optipush' from the Channel drop-down menu.
+ 2. Enter values for the following fields:
+	 - Template Name- Name the template 
+	 - Template Title - Title of push template
+	 - Message - Message of the template
+![](https://raw.githubusercontent.com/optimove-tech/A/master/O/O%20for%20iOS/images/3.png)
 
-## <a id="Optipush campaign"></a>Set up an OptiPush campaign
+ 3. Personalization - you can personalize the notification by adding dynamic tags and emojis to the notification.
+ 4. Preview - you can preview the push template notification before sending it out.
+ 5. **Deep links** (Optional) - choose the app (Android) and select the target screen in your app that you want your customers to be directed to when opening the message. <br>
+ >Notes:
+ >- In order to add Deep Links to the drop-down menu, please send the list of screen names to your CSM that you have configured in your app as described [here](https://github.com/optimove-tech/A/tree/master/O/O%20for%20A#deep-linking).
+ >- *If a Deep Link is not chosen, the customer will be directed to the main screen when opening the message.* 
+ >- When creating templates for Optipush, if the template is targeted for a specific device (iOS/Android), it is recommended to add the device name to the template naming convention. This way it will be identifiable when choosing a template for a campaign targeting a specific device.<br>
+ 
 
+### Test an Optipush Template
 
+1. **Validate** - validates the push notification template to make sure all mandatory fields are completed and contain no errors. 
+2. **Send Test**  - clicking this link will send the push notification template to all devices that have the app installed with the test mode enabled.<br>
 
+## <a id="Optipush campaign"></a>Set up an Optipush campaign
 
+### Run Campaign
 
+Please follow these steps in order to run a pre-scheduled campaign via execution channel **Optipush**.
+1. From the main menu go on *One-to-One Campaigns* --> click on *More* from the drop-down menu --> click on ***Run Campaign***.  
+2. Go through Steps 1 & 2 of the Run Campaign wizard as you would for any campaign.
+3. In Step 3 (Execution Details) choose from the *Channel* drop-down menu *Optipush*. This action will open the **Optipush Options** window.<br>
+![](https://raw.githubusercontent.com/optimove-tech/A/master/O/O%20for%20iOS/images/2_a.png)
+
+4. Choose from the *App* drop-down menu if you would like to run the campaign for your iOS app, Android app, or both by selecting the relevant box(es).
+5. Choose the relevant template for the *Template* drop down menu that you would like the targeted audience to receive.
+6. Continue through the remaining steps of the Run Campaign wizard to schedule the campaign for your preferred dates and times.
