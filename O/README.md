@@ -1,4 +1,5 @@
-# Executing Push Notifications (OptiPush)
+
+# Executing Push Notifications (Optipush)
 
 Optipush is Optimove’s mobile push notification delivery add-in module, powering all aspects of preparing, delivering and tracking mobile push notification communications to customers, seamlessly from within Optimove.
 
@@ -8,5 +9,5 @@ Additional functionality, such as the use of deep linking and testing Optipush t
 
 For more information on how to add Optipush to your account, please contact your CSM or your Optimove point of contact.
 
- - Implement [OptiPush for your iOS native app](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS)
- - Implement [OptiPush for your Android native app](https://github.com/optimove-tech/A/tree/master/O/O%20for%20A)
+ - Implement [Optipush for your iOS native app](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS)
+ - Implement [Optipush for your Android native app](https://github.com/optimove-tech/A/tree/master/O/O%20for%20A)
