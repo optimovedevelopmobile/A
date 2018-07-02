@@ -3,7 +3,7 @@
 - [Basic Setup](#Basic%20Setup)
 - [Advanced Setup](#Advanced%20Setup)
 -   [Track](#Track)
-	-   [Linking App Visitors to Registered Customer IDs](#Linking%20Visitors%20to%20Users)
+	-   [Stitching App Visitors to Registered Customer IDs](#Stitching%20Visitors%20to%20Users)
 	-   [Tracking Screen Visits](#Tracking%20a%20Screen%20Visit)
 	-   [Reporting Custom Events](https://docs.optimove.com/optimove-sdk/#Web_Reporting_Events)
 -   [Trigger](#Trigger)
@@ -150,7 +150,7 @@ This Id should be a positive _*Int*_.
 You will also need to include the following steps to complete the basic setup:
 
  - Reporting User Activities and Events
- - [Linking App Visitors to Registered Customer IDs](Linking%20Visitors%20to%20Users)
+ - [Stitching App Visitors to Registered Customer IDs](Stitching%20Visitors%20to%20Users)
 <br>
 
 
@@ -165,7 +165,7 @@ As described in [Reporting Custom Events](https://github.com/optimove-tech/SDK-C
 
 # <a id="Track"></a>Track
 
-## <a id="Linking Visitors to Users"></a>Linking App Visitors to Registered Customer IDs
+## <a id="Stitching Visitors to Users"></a>Stitching App Visitors to Registered Customer IDs
 
 Once the user has downloaded the application and the *OptimoveSDK* for iOS has run for the first time, the user is considered a *visitor*, i.e., an unidentified person.
 
