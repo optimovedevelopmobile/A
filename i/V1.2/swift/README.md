@@ -1,13 +1,34 @@
 
-# OptimoveSDK
+- [Introduction](#Introduction)
+- [Basic Setup](#Basic%20Setup)
+- [Advanced Setup](#Advanced%20Setup)
+-   [Track](#Track)
+	-   [Stitching App Visitors to Registered Customer IDs](#Stitching%20Visitors%20to%20Users)
+	-   [Tracking Screen Visits](#Tracking%20a%20Screen%20Visit)
+	-   [Tracking Custom Events](https://docs.optimove.com/optimove-sdk/#Web_Reporting_Events)
+-   [Trigger](#Trigger)
+ 	- [Executing via Optimail](#trigger-optimail)
+	- [Executing via Optimove APIs](#trigger-api)
+<br>
 
-  
+# <a id="Introduction"></a> Introduction
 
-## Basic Setup
+Marketers use the [Optimove Relationship Marketing Hub](https://www.optimove.com/product) to automate the execution of highly-personalized customer communications. Optimove offers its clients an efficient way to report data from their websites and trigger campaigns accordingly.
 
-  
+This guide will show you how to setup the iOS (Swift) SDK in order to:
 
-### pre-requisites
+ - Track visitor and customer actions and events
+ - Trigger Realtime campaigns
+
+
+# <a id="Basic Setup"></a> Basic Setup
+
+## **Request a Mobile SDK from Optimove**
+
+Before implementing the Optimove Track & Trigger to track visitor / customer activities or perform other functions ([OptiPush](https://github.com/optimove-tech/A/blob/master/O/O.md)), you will need to contact your Optimove Customer Success Manager (CSM) or Optimove point of contact. <br>
+To get started, please follow these instructions: 
+
+### 1. Pre-requisites <br>
 
 1. You have a paid development account for your iOS app, and valid certificates for remote notifications or APN Auth key.
 
@@ -16,47 +37,35 @@
 4. Optimove SDK is dependent on Firebase version 5.4.0
 
 
-### Provide you iOS details:
+### 2. Provide your iOS app details: <br>
 
-Send the following information to your CSM or Optimove POC with your request for your Mobile SDK configuration details in order to incorporate into your iOS app :
+Send the following information to your CSM or Optimove POC with your request for your Mobile SDK configuration details in order to incorporate into your iOS app :<br>
 
+1.	***Auth key*** (with its key id) P8 format
+2.	***Bundle ID*** (If you are using multiple apps for development/testing purposes, please provide a list of all bundle IDs being used for all environments.)
+3.	***Team ID*** (from apple developer dashboard)
+4.	***App Store ID*** (from itunesconnect)<br>
   
 
-1. Auth key (with its key id) P8 format
+### 3. Retrieve *tenant_information_suite* details: <br>
 
-2. Bundle ID (If you are using multiple apps for development/testing purposes, please provide a list of all bundle IDs being used for all environments.)
 
-3. Team ID (from apple developer dashboard)
+After providing the info above, you will receive a *tenant_information_suite* from the Optimove Product Integration Team that contains:<br>
+1.	***End-point URL*** – The URL where the tenant configurations reside
+2.	***Unique Optimove token*** – The actual token, unique per tenant
+3.	***Configuration name*** – The version of the desired configuration
 
-4. App Store ID (from itunesconnect)
-
-  
-
-### Retrieve tenant_information_suite details:
-
-After providing the info above, you will receive a tenant_information_suite from the Optimove Product Integration Team that contains:
-
-  
-
-1. `End-point URL` – The URL where the tenant configurations reside
-
-2. `Unique Optimove token` – The actual token, unique per tenant
-
-3. `Configuration name` – The version of the desired configuration
-
-For a demo application containing the iOS SDK, please use our iOS GitHub repository.
+For a demo application containing the iOS SDK, please use our [iOS GitHub repository](https://github.com/optimove-tech/iOS-SDK-Integration-Guide/tree/master/DemoApplication/SwiftDemoApp).
 
   
   
 
 ## Setting up the iOS SDK
 
-  
-
-### Installation
-1. . In your Application Target Capabilities 
-	1a. Enable `push notifications` capabilities 
-	1b. Enable`remote notifications` capabilities in`Background Modes`
+### 1. Install the SDK 
+In your Application Target Capabilities: 
+	1. Enable `push notifications` capabilities 
+	2. Enable`remote notifications` capabilities in`Background Modes`
 
  
 [![apple_dashboared.png](https://s9.postimg.cc/9ln5sfxe7/apple_dashboared.png)](https://postimg.org/image/itfe954gb/)
@@ -64,8 +73,8 @@ For a demo application containing the iOS SDK, please use our iOS GitHub reposit
 ----
 ### Optipush configuration
 1.  In application target capabilities -> App Groups - add the following group using the naming convention:
-	group.<BundleId>.optimove
-2. Add **Notification Service Extension** to your project (Targets)
+	group.[*your Bundle Id*].optimove
+2. Add **Notification Service Extension** to your project under Targets
 3. Under Notification service extension capabilities -> App Groups, select the group you created in #1.
 ------
 
