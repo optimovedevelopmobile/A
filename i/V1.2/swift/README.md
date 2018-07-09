@@ -57,31 +57,25 @@ After providing the info above, you will receive a *tenant_information_suite* fr
 
 For a demo application containing the iOS SDK, please use our [iOS GitHub repository](https://github.com/optimove-tech/iOS-SDK-Integration-Guide/tree/master/DemoApplication/SwiftDemoApp).
 
-  
-  
+    
 
 ## Setting up the iOS SDK
 
 ### 1. Install the SDK 
 In your Application Target Capabilities: 
-1. Enable `push notifications` capabilities 
-2. Enable`remote notifications` capabilities in`Background Modes`
- 
+1. Enable `push notifications` capabilities <br>
+2. Enable`remote notifications` capabilities in`Background Modes`<br> 
 [![apple_dashboared.png](https://s9.postimg.cc/9ln5sfxe7/apple_dashboared.png)](https://postimg.org/image/itfe954gb/)
 
 
-### 2. If you are using Optipush, see additional configurations [here](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS/O%20for%20iOS%20V1.2#2-optipush-configuration) 
 
-### 3.  Download OptimoveSDK pod
+### 2.  Download *OptimoveSDK* pod
 In order to work with the Optimove SDK for your iOS native app, need to download its module from CocoaPods.
 
 1. In your Podfile, add the following:
 
 `pod OptimoveSDK`
 
-If you are using Optipush, add the following under the extension target:
-
-  `pod 'OptimoveNotificationServiceExtension`'
 
 Example:
 ```ruby
@@ -95,14 +89,6 @@ target 'iOSDemo' do
   pod 'OptimoveSDK'
 
 end
-
-target 'NotificationExtension' do
-  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
-  use_frameworks!
-
-  pod 'OptimoveNotificationServiceExtension'
-
-end
 ```
 
 2. `OptimoveSDK` relies on other modules as infrastructure, such as `Firebase`, so when you download `OptimoveSDK` you get the following frameworks:
@@ -113,104 +99,8 @@ end
 
 * `Firebase/DynamicLinks`
 
-
-#### Notification Service Extension
-
-In order to enable `Optimove` to track its push notifications, you'll need to add a `Notification Extension` to your project.
-
-Since the `Notification Extension` is a different target, it must use an additional, lean, SDK of `Optimove`. so in your `Podfile` add an additional dependency:
-
-  `pod 'OptimoveNotificationServiceExtension`'
-  
-`Note` that the extension versioning must be aligned with the application.
-
-Make sure that the extension's `Deployment Target` (found in the project's settings page) is the **same** as the app's `Deployment Target
-
-  In order to enable communication between the extension and the application, add an `App group` capability in both of the targets.
-
-The group name convension should be: `group.<the application bundle id>.optimove`
-
-Notication Extension group is automatically generated.
-In the group, go to `NotificationService.swift`  and add
- `import OptimoveNotificationServiceExtension`
- 
-Inside `class NotificationService`, add
-```swift
-var optimoveExtensionService:OptimoveNotificationServiceExtension!
-```
-Inside the `override func didReceive( request: contentHandler:)` initialize the notification extension tenant info:
-
-
-```swift
-let info = NotificationExtensionTenantInfo(endpoint: "htts://www.endpoint.com",
-                                                   token: "ios-demo-token",
-                                                   version: "ios.demo.version.1",
-                                                   appBundleId: "com.optimove.sdk.demo")
-        optimoveExtensionService = OptimoveNotificationServiceExtension(tenantInfo: info)
-  ```
-
->Notes: 
->- The values should correspond to the tenant info provided by the Product Integration team.
->- The `appBundleId` refers to the app bundle Id from the application target (not from the Notification extension target)
-
-2 functions to be defined:
-1. didReceive
-2. serviceExtensionTimeWillExpire
-
-In order to identify if the message should be handled by Optimove, add the following code snippet:
-```swift
-optimoveExtensionService.didReceive(request, withContentHandler: contentHandler)
-        if !optimoveExtensionService.isHandledByOptimove 
-```
-In order to notify Optimove that your extension is about to be terminated, add the following code snippet:
-```swift
-override func serviceExtensionTimeWillExpire() {
-        if optimoveExtensionService.isHandledByOptimove {
-            optimoveExtensionService.serviceExtensionTimeWillExpire()
-        } else {
-            if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
-                contentHandler(bestAttemptContent)
-            }
-        }
-    }
-```
-
-Example for full implementation:
-```swift
-override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-        
-        let info = NotificationExtensionTenantInfo(endpoint: "htts://www.endpoint.com",
-                                                   token: "ios-demo-token",
-                                                   version: "ios.demo.version.1",
-                                                   appBundleId: "com.optimove.sdk.demo")
-        optimoveExtensionService = OptimoveNotificationServiceExtension(tenantInfo: info)
-        
-        optimoveExtensionService.didReceive(request, withContentHandler: contentHandler)
-        if !optimoveExtensionService.isHandledByOptimove {
-            self.contentHandler = contentHandler
-            bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
-            
-            if let bestAttemptContent = bestAttemptContent {
-                // Modify the notification content here...
-                bestAttemptContent.title = "\(bestAttemptContent.title) [modified]"
-                
-                contentHandler(bestAttemptContent)
-            }
-        }
-    }
+### 3. If you are using Optipush, see additional configurations [here](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS/O%20for%20iOS%20V1.2#2-optipush-configuration)  
     
-    override func serviceExtensionTimeWillExpire() {
-        if optimoveExtensionService.isHandledByOptimove {
-            optimoveExtensionService.serviceExtensionTimeWillExpire()
-        } else {
-            if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
-                contentHandler(bestAttemptContent)
-            }
-        }
-    }
-```
-      
-
 ### Run the SDK
 
 In your _`AppDelegate`_ class, inside the application
@@ -232,16 +122,15 @@ _`application (_: didFinishLaunchingWithOptions:)`_ method, create a new `Optimo
 Use this object as an argument for the SDK function,
 
   
-
-`Optimove.sharedInstance.configure(info:)`
-
+```swift
+   Optimove.sharedInstance.configure(info:)
+```
   
-
 This call initializes the OptimoveSDK singleton.
 
 6. You should register for notification certificate from APN using `UIApplication.shared.registerForRemoteNotifications()`
 
-For Optipush
+Apply items 7-8 if using **Optipush**:
 7. Also, if you'd like to present the notifications to the user, request authorization for that using:
 
 `UNUserNotificationCenter.current().requestAuthorization(options:completionHandler:)`
@@ -494,5 +383,3 @@ For more information on how to acquire an API key to use Optimove APIs, please r
 Ability to execute campaigns using Optimove’s push notification add-on product, Optipush.
 _*Optipush*_ is Optimove’s mobile push notification delivery add-in module, powering all aspects of preparing, delivering and tracking mobile push notification communications to customers, seamlessly from within Optimove.<br>  _*Optimove SDK*_ for iOS includes built-in functionality for receiving push messages, presenting notifications in the app UI and tracking user responses.
 For instruction on setting up Optipush for iOS click [here](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS/O%20for%20iOS%20V1.2).
-
-
