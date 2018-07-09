@@ -24,11 +24,130 @@ _*Optipush*_ is Optimove’s mobile push notification delivery add-in module, po
 
 ### 2. Optipush Configuration
 
-1.  In application target capabilities -> App Groups - add the following group using the naming convention:
-	group.[*BundleId*].optimove
-2. Add **Notification Service Extension** to your project under Targets
-3. Under Notification service extension capabilities -> App Groups, select the group you created in #1.
+#### Notification Service Extension <br>
 
+In order to enable Optimove to track the push notifications, you'll need to add a **Notification Extension** to your project.
+
+1. Since the `Notification Extension` is a different target, it must use an additional, lean, SDK of Optimove. To do this, in your `Podfile` add an additional dependency:
+
+  `pod 'OptimoveNotificationServiceExtension`'
+  
+>Notes: 
+>- The extension versioning must be aligned with the application.
+>- Make sure that the extension's `Deployment Target` (found in the project's settings page) is the **same** as the app's `Deployment Target
+
+See following example containing both `OptimoveSDK` & `OptimoveNotificationServiceExtension`:
+
+```ruby
+
+platform :ios, '10.0'
+
+target 'iOSDemo' do
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
+
+  pod 'OptimoveSDK'
+
+end
+
+target 'NotificationExtension' do
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
+
+  pod 'OptimoveNotificationServiceExtension'
+
+end
+```
+
+2. In order to enable communication between the extension and the application, add an `App group` capability in both of the targets.
+
+The group name convention should be: `group.<the application bundle id>.optimove`
+
+3. Add **Notification Service Extension** to your project under Targets
+4. Under Notification service extension capabilities -> App Groups, select the group you created in #1.
+
+5. Once you created the group name in #2, *Notification Extension group* is automatically generated.
+In this group, go to `NotificationService.swift`  and add
+ `import OptimoveNotificationServiceExtension`
+ 
+Inside `class NotificationService`, add
+```swift
+var optimoveExtensionService:OptimoveNotificationServiceExtension!
+```
+Inside the `override func didReceive( request: contentHandler:)` initialize the notification extension tenant info:
+
+
+```swift
+let info = NotificationExtensionTenantInfo(endpoint: "htts://www.endpoint.com",
+                                                   token: "ios-demo-token",
+                                                   version: "ios.demo.version.1",
+                                                   appBundleId: "com.optimove.sdk.demo")
+        optimoveExtensionService = OptimoveNotificationServiceExtension(tenantInfo: info)
+  ```
+
+>Notes: 
+>- The values should correspond to the tenant info provided by the Product Integration team.
+>- The `appBundleId` refers to the app bundle Id from the application target (not from the Notification extension target)
+
+6. Within *Notification Extension group* 2 functions need to be defined:
+-  `func didReceive`
+-  `func serviceExtensionTimeWillExpire()`
+
+In order to identify if the message should be handled by Optimove, add the following code snippet:
+```swift
+optimoveExtensionService.didReceive(request, withContentHandler: contentHandler)
+        if !optimoveExtensionService.isHandledByOptimove 
+```
+In order to notify Optimove that your extension is about to be terminated, add the following code snippet:
+```swift
+override func serviceExtensionTimeWillExpire() {
+        if optimoveExtensionService.isHandledByOptimove {
+            optimoveExtensionService.serviceExtensionTimeWillExpire()
+        } else {
+            if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
+                contentHandler(bestAttemptContent)
+            }
+        }
+    }
+```
+
+Example for full implementation:
+```swift
+override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+        
+        let info = NotificationExtensionTenantInfo(endpoint: "htts://www.endpoint.com",
+                                                   token: "ios-demo-token",
+                                                   version: "ios.demo.version.1",
+                                                   appBundleId: "com.optimove.sdk.demo")
+        optimoveExtensionService = OptimoveNotificationServiceExtension(tenantInfo: info)
+        
+        optimoveExtensionService.didReceive(request, withContentHandler: contentHandler)
+        if !optimoveExtensionService.isHandledByOptimove {
+            self.contentHandler = contentHandler
+            bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+            
+            if let bestAttemptContent = bestAttemptContent {
+                // Modify the notification content here...
+                bestAttemptContent.title = "\(bestAttemptContent.title) [modified]"
+                
+                contentHandler(bestAttemptContent)
+            }
+        }
+    }
+    
+    override func serviceExtensionTimeWillExpire() {
+        if optimoveExtensionService.isHandledByOptimove {
+            optimoveExtensionService.serviceExtensionTimeWillExpire()
+        } else {
+            if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
+                contentHandler(bestAttemptContent)
+            }
+        }
+    }
+```
+
+
+#### Notification of APN token
 
 In order for Optipush to be able to deliver push notifications to your iOS app, Optimove SDK for iOS must receive an APN token from your app. This is accomplished by the following  steps:
 Inside the application `AppDelegate` class </br>
@@ -74,76 +193,73 @@ application(_:didReceiveRemoteNotification:fetchCompletionHandler:)
 <br>
 
 ## <a id="deep linking"></a>Deep Linking
+
 In order to route end users back to the application from the notification, you must support *Deep Linking*.
-Other than _UI attributes_, an **_Optipush Notification_** can contain metadata linking to a specific screen within your application, along with custom (screen specific) data. </br>
 
-To support deep linking, you should:
+Other than _UI attributes_, an **_Optipush Notification_** can contain metadata linking to a specific screen within your application, along with custom (screen specific) data.<br>
 
-* Enable Associated Domains:
+  To support deep linking, you should:
 
-In your project capabilities, add the deep link domain with `applinks:` prefix and without any `https://` prefix that will be **provided to you by Optimove Product Integration team**.
+  * Enable Associated Domains:
 
-[![associated_domain.png](https://s9.postimg.cc/hqrw4eqm7/associated_domain.png)](https://postimg.cc/image/3x3jfcy0r/)
-</br>
+In your project capabilities, add the dynamic link domain with `applinks:` prefix and without any `https://` prefix that will be **provided to you by Optimove Product Integration team**
 
-Any  _`ViewControler`_ should recieve DeepLink data callback, should implement _`didReceive(deepLink:)`_, thus conforming to _`OptimoveDeepLinkCallback`_ protocol .</br>
+  
+![associated_domain.png](https://s9.postimg.cc/hqrw4eqm7/associated_domain.png)
+
+<br>
+
+Any _`ViewControler`_ should recieve DynamicLink data callback, should implement _`didReceive(dynamicLink:)`_, thus conforming to _`OptimoveDeepLinkCallback`_ protocol .<br>
+
 _`OptimoveDeepLinkCallback`_ protocol has one method:
 
 ````swift
 didReceive(deepLink:)
 ````
 
-A deepLinkComponent struct contains two properties:
+that receives an `OptimoveDeepLinkComponents` as argument
+  
+A `OptimoveDeepLinkComponents` entity contains two properties:
 
-· **ScreenName**: for the required _*viewcontroller*_ you need to segue to.
+   - **ScreenName**: for the required _*viewcontroller*_ you need to segue to.
+  - **Query**: That contain the content that should be included in that view controller. <br>
 
-· **Query**: That contain the content that should be included in that view controller.
-
-example:
+  
+Example:
 
 ````swift
-class ViewController: UIViewController,OptimoveDeepLinkCallback
+func didReceive(deepLink: OptimoveDeepLinkComponents?)
 {
-    private var responder: OptimoveDeepLinkResponder!
-    func didReceive(deepLink: OptimoveDeepLinkComponents?)
-    {
-            let vc = self.storyboard!.instantiateViewController(withIdentifier: deepLink!.screenName)
-            self.navigationController?.pushViewController(vc, animated: true)
-    } 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        Optimove.sharedInstance.register(stateDelegate: self)
-        responder = OptimoveDeepLinkResponder(self) 
-    }
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        Optimove.sharedInstance.register(deepLinkResponder: responder)
-    }
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        Optimove.sharedInstance.unregister(deepLinkResponder: responder)
-    }
+let vc = self.storyboard!.instantiateViewController(withIdentifier: deepLink!.screenName)
+self.navigationController?.pushViewController(vc, animated: true)
 }
 ````
 
+  
 ## <a id="test mode"></a>Enabling Test Mode
  
 You can test an **Optipush template** on your device *before* having to create an **Optipush campaign**.
-To **enable** _"test Optipush templates"_ on one or more devices, call the _**`Optimove.sharedInstance.subscribeToTestMode()`**_ method.</br>
-To **disable** _"test Optipush templates"_ call  _**`Optimove.sharedInstance.unSubscribeFromTestMode()`**_.</br>
+
+To enable _"test campaigns"_ on one or more devices, call the _**`Optimove.sharedInstance.startTestMode()`**_ method.<br>
+
+To stop receiving _"test campaigns"_ call _**`Optimove.sharedInstance.stopTestMode()`**_.<br>
+
+  
 
 ````swift
 class ViewController: UIViewController {
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        Optimove.sharedInstance.subscribeToTestMode()
-    }
+override func viewDidAppear(_ animated: Bool) {
+super.viewDidAppear(animated)
+Optimove.sharedInstance.startTestMode()
+	}
 }
 ````
+
 
 >**Notes:**
 >- It is recommended to maintain 2 apps - one with test mode enabled (for internal purposes ONLY) and one without test mode enabled (for the general public).
 >- The app that is published to the App Store should NOT have the test mode enabled.
+
 <br>
 
 # <a id="Post setup"></a>Post-Setup
@@ -158,15 +274,15 @@ Once Optimove has enabled Optipush as an execution channel for your Optimove ins
 
 ### Create  an Optipush Template
 
- 1. Go to the Manage Templates page and choose 'Optipush' from the Channel drop-down menu.
+ 1. Go to the Manage Templates page and choose 'Optipush' from the Channel drop-down menu. <br>
  2. Enter values for the following fields:
-	 - Template Name- Name the template 
+	- Template Name- Name te template 
 	 - Template Title - Title of push template
-	 - Message - Message of the template
+	 - Message - Message of the template <br>
 ![](https://raw.githubusercontent.com/optimove-tech/A/master/O/O%20for%20iOS/images/3.png)
-
- 3. Personalization - you can personalize the notification by adding dynamic tags and emojis to the notification.
- 4. Preview - you can preview the push template notification before sending it out.
+<br>
+ 3. Personalization - you can personalize the notification by adding dynamic tags and emojis to the notification. <br>
+ 4. Preview - you can preview the push template notification before sending it out. <br>
  5. **Deep links** (Optional) - choose the app (iOS) and select the target screen in your app that you want your customers to be directed to when opening the message. <br>
  >Notes:
  >- In order to add Deep Links to the drop-down menu, please send the list of screen names to your CSM that you have configured in your app as described [here](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS#deep-linking).
@@ -176,19 +292,19 @@ Once Optimove has enabled Optipush as an execution channel for your Optimove ins
 
 ### Test an Optipush Template
 
-1. **Validate** - validates the push notification template to make sure all mandatory fields are completed and contain no errors. 
+1. **Validate** - validates the push notification template to make sure all mandatory fields are completed and contain no errors. <br>
 2. **Send Test**  - clicking this link will send the push notification template to all devices that have the app installed with the test mode enabled.<br>
 
 ## <a id="Optipush campaign"></a>Set up an Optipush campaign
 
 ### Run Campaign
 
-Please follow these steps in order to run a pre-scheduled campaign via execution channel **Optipush**.
-1. From the main menu go on *One-to-One Campaigns* --> click on *More* from the drop-down menu --> click on ***Run Campaign***.  
-2. Go through Steps 1 & 2 of the Run Campaign wizard as you would for any campaign.
+Please follow these steps in order to run a pre-scheduled campaign via execution channel **Optipush**.<br>
+1. From the main menu go on *One-to-One Campaigns* --> click on *More* from the drop-down menu --> click on ***Run Campaign***.  <br>
+2. Go through Steps 1 & 2 of the Run Campaign wizard as you would for any campaign. <br>
 3. In Step 3 (Execution Details) choose from the *Channel* drop-down menu *Optipush*. This action will open the **Optipush Options** window.<br>
 ![](https://raw.githubusercontent.com/optimove-tech/A/master/O/O%20for%20iOS/images/2_a.png)
-
-4. Choose from the *App* drop-down menu if you would like to run the campaign for your iOS app, Android app, or both by selecting the relevant box(es).
-5. Choose the relevant template for the *Template* drop down menu that you would like the targeted audience to receive.
+<br>
+4. Choose from the *App* drop-down menu if you would like to run the campaign for your iOS app, Android app, or both by selecting the relevant box(es).<br>
+5. Choose the relevant template for the *Template* drop down menu that you would like the targeted audience to receive.<br>
 6. Continue through the remaining steps of the Run Campaign wizard to schedule the campaign for your preferred dates and times.
