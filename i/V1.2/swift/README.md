@@ -9,8 +9,7 @@
 -   [Trigger](#Trigger)
  	- [Executing via Optimail](#trigger-optimail)
 	- [Executing via Optimove APIs](#trigger-api)
-	- [Executing via Optipush](trigger-optipush)
-<br>
+	<br>
 
 # <a id="Introduction"></a> Introduction
 
@@ -47,10 +46,10 @@ Send the following information to your CSM or Optimove POC with your request for
 4.	***App Store ID*** (from itunesconnect)<br>
   
 
-### 3. Retrieve *tenant_information_suite* details: <br>
+### 3. Retrieve *OptimoveTenantInfo* details: <br>
 
 
-After providing the info above, you will receive a *tenant_information_suite* from the Optimove Product Integration Team that contains:<br>
+After providing the info above, you will receive a *OptimoveTenantInfo* from the Optimove Product Integration Team that contains:<br>
 1.	***End-point URL*** – The URL where the tenant configurations reside
 2.	***Unique Optimove token*** – The actual token, unique per tenant
 3.	***Configuration name*** – The version of the desired configuration
@@ -79,203 +78,114 @@ In order to work with the Optimove SDK for your iOS native app, need to download
 
 Example:
 ```ruby
-
 platform :ios, '10.0'
 
 target 'iOSDemo' do
-  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
 
   pod 'OptimoveSDK'
-
 end
 ```
 
 2. `OptimoveSDK` relies on other modules as infrastructure, such as `Firebase`, so when you download `OptimoveSDK` you get the following frameworks:
 
 * `Firebase/Core` version `5.4.0`
-
 * `Firebase/Messaging`
-
 * `Firebase/DynamicLinks`
 
 ### 3. If you are using Optipush, see additional configurations [here](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS/O%20for%20iOS%20V1.2#2-optipush-configuration)  
     
-### Run the SDK
+### 4. Run the SDK
 
-In your _`AppDelegate`_ class, inside the application
+In your `AppDelegate` class, inside the callback
+  `application (_: didFinishLaunchingWithOptions:)` method, create a new `OptimoveTenantInfo` object. This object should contain:
 
-  
-_`application (_: didFinishLaunchingWithOptions:)`_ method, create a new `OptimoveTenantInfo` object. This object should contain:
-
-  
 1. The end-point URL
-
 2. Unique Optimove token
-
 3. The configuration version provided by the Optimove Integration Team
-
 4. Indication for existing Firebase module inside your application
-
 5. Indication for using your own `Firebase/Messaging`
 
 Use this object as an argument for the SDK function,
 
-  
-```swift
-   Optimove.sharedInstance.configure(info:)
-```
-  
+ ```swift
+  Optimove.sharedInstance.configure(info:)
+```  
 This call initializes the OptimoveSDK singleton.
 
-6. You should register for notification certificate from APN using `UIApplication.shared.registerForRemoteNotifications()`
+6. You should register for notification certificate from APNs using `UIApplication.shared.registerForRemoteNotifications()`
 
-Apply items 7-8 if using **Optipush**:
-7. Also, if you'd like to present the notifications to the user, request authorization for that using:
+>Note: It is necessary to `import OptimoveSDK` in any file that uses `OptimoveSDK` API 
 
-`UNUserNotificationCenter.current().requestAuthorization(options:completionHandler:)`
-
-8. Finally declare the `AppDelegate` as the `UserNotificationCenter` delegate
-
-9. For steps 6 - 8 you must import `UserNotifications` and `OptimoveSDK` (the last import is necessary in any class that uses `OptimoveSDK` API )
+<br>
 
 For example:
-
-  
-
 ```swift
-
 import UIKit
-
 import UserNotifications
-
 import OptimoveSDK
 
-  
-  
-
 @UIApplicationMain
-
 class AppDelegate: UIResponder,
-
 UIApplicationDelegate,
-
 UNUserNotificationCenterDelegate
-
 {
-
 var window: UIWindow?
 
-func application(_ application: UIApplication,
-
-didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-
-  
-
-let info = OptimoveTenantInfo(url: "https://optimove.mobile.demo",
-
-token: "abcdefg12345678",
-
-version: "myapp.ios.1.0.0",
-
-hasFirebase: false,
-
-useFirebaseMessaging: false)
-
-Optimove.sharedInstance.configure(for: info)
-
-UNUserNotificationCenter.current().requestAuthorization(options: [.alert]) { (grant, error) in
-
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+	// Intialize the Optimove SDK
+	let info = OptimoveTenantInfo(url: "https://optimove.mobile.demo",
+		  token: "abcdefg12345678",
+		  version: "myapp.ios.1.0.0",
+		  hasFirebase: false,
+		  useFirebaseMessaging: false)
+	Optimove.sharedInstance.configure(for: info)
+	
+	// Notify the OS that the app needs to receive an APNs token
+	UIApplication.shared.registerForRemoteNotifications()
+	
+	return true
+	}
 }
-
-UIApplication.shared.registerForRemoteNotifications()
-
-UNUserNotificationCenter.current().delegate = self
-
-return true
-
-}
-
 ```
-
-Note : The initialization must be called as soon as possible, unless you have your own _`Firebase SDK.`_ In this case, start the initialization right after calling `FirebaseApp.configure().
+>Note : The initialization **must** be called as soon as possible, unless you have your own _Firebase SDK_. In this case, call `Optimove.configure(info:)` right after calling `FirebaseApp.configure()`.
 
   
 
 Still in `AppDelegate`, please implement the following callbacks:
 
 ```swift
-
-func application(_ application: UIApplication,
-
-didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data)
-
+// Called when the OS generates an APNs token
+func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data)
 {
-
-Optimove.sharedInstance.application(didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
-
+	// Forward the callback to the Optimove SDK
+	Optimove.sharedInstance.application(didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
 }
 
+// Called when a push message is received by the OS and forwarded to the app's process (used for Optimove analytical purposes)
 func application(_ application: UIApplication,
-
 didReceiveRemoteNotification userInfo: [AnyHashable : Any],
-
 fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void)
-
 {
-
-if !Optimove.sharedInstance.didReceiveRemoteNotification(userInfo: userInfo,didComplete: completionHandler)
-
-{
-
-completionHandler(.newData)
-
-	}
-}
-
-func userNotificationCenter(_ center: UNUserNotificationCenter,
-
-didReceive response: UNNotificationResponse,
-
-withCompletionHandler completionHandler: @escaping () -> Void) {
-
-if !Optimove.sharedInstance.didReceive(response: response,withCompletionHandler: completionHandler)
-
-{
-
-completionHandler()
-
-	}
-}
-
-func userNotificationCenter(_ center: UNUserNotificationCenter,
-
-willPresent notification: UNNotification,
-
-withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-
-if !Optimove.sharedInstance.willPresent(notification: notification, withCompletionHandler: completionHandler)
-
-{
-
-completionHandler(.alert)
-
+	// Forward the callback to the Optimove SDK 
+	if !Optimove.sharedInstance.didReceiveRemoteNotification(userInfo: userInfo,didComplete: completionHandler)
+	{
+		// The push message was not targeted for Optimove SDK. Implement your logic here or leave as is. 
+		completionHandler(.noData)
 	}
 }
 ```
-
-All of `Optimove` methods (except the `didRegisterForRemoteNotificationsWithDeviceToken` ) return a boolean value that indicate if the received notification should be handled by `OptimoveSDK` or it is part of the application services and should be handle by you.
-
   
 
 ### 3. Important Installation and Usage Notes
 
 The SDK initialization process occurs asynchronously, off the `Main Thread`.
 
-Before calling the Public API methods, make sure that the SDK has finished initialization by calling the `registerSuccessStateListener(listener:)` method with an instance of _`OptimoveSuccessStateListener`_.
-  
 
-When the SDK finished its initializtion process, it'll call the callback `optimove(_:didBecomeActiveWithMissingPermissions:) ` and provide the missing permission that the SDK must have in order to work properly.
+Before calling the Public API methods, make sure that the SDK has finished initialization by calling the `registerSuccessStateListener(listener:)` method with an instance of `OptimoveSuccessStateListener`.
+
+
+When the SDK has finished its initialization process, the callback `optimove(_:didBecomeActiveWithMissingPermissions:)` is executed with any missing permissions that the SDK would require to operate optimally. 
 
 ### 4. Tracking Visitor and Customer activity
  
@@ -298,35 +208,44 @@ As described in [Tracking Custom Events](https://github.com/optimove-tech/SDK-Cu
 
 ## <a id="Stitching Visitors to Users"></a>Stitching App Visitors to Registered Customer IDs
 
-Once the user has downloaded the application and the _Optimove SDK_ run for the first time, the user is considered a _Visitor_, i.e. an unidentified person.<br>
+Once the user has downloaded the application and the _Optimove SDK_ run for the first time, the user is considered a _Visitor_, i.e. unidentified user<br>
 
-Once the user authenticates and becomes identified by a known `PublicCustomerId`, then the user is considered _Customer_.<br>
+Once the user has authenticated and become identified by a known `PublicCustomerId`, then the user is considered a _Customer_.<br>
 
-As soon as this happens for each individual user, pass the `CustomerId` to the `Optimove` singleton like this: <br>
-
+As soon as this happens for each individual user, call the following method with the newly acquired  `CustomerId`:<br>
 ```swift
 Optimove.sharedInstance.set(userId:)
 ```
 
 >**Notes:** 
->
- >- The `CustomerId` is usually provided by the server application that manages customers, and is the same ID provided to Optimove during the daily customer data transfer. 
- >- Due to its high importance, `set (userId:)` may be called at any time.
+>- The `CustomerId` is usually provided by the server application that manages customers, and is the **same** ID provided to Optimove during the daily customer data transfer. 
+ >- You may call the `set(userId:)` method at any time, regardless if the initialization success callback was received
 > - If you will be sending encrypted userId, please follow the steps in [Reporting encrypted CustomerIDs](https://github.com/optimove-tech/Reporting-Encrypted-CustomerID)
  
 <br>
 
 ## <a id="Tracking a Screen Visit"></a>Tracking Screen Visits
-To track which screens the user has visited in your app, send a _setScreenEvent_ message to the shared Optimove instance:.<br>
 
-  
-````swift
-Optimove.sharedInstance.reportScreenVisit(viewControllersIdentifiers:url)
-````
+To track which screens the user has visited in your app, call the following method:<br>
 
-The _`viewControllersIdentifiers`_ argument should include an array that represents the path to the current screen.<br>
+```swift
+Optimove.sharedInstance.reportScreenVisit(viewControllersIdentifiers:url:category)
+```
 
-To support more complex view hierarchies, you may also specify a screen URL in the second parameter.<br>
+The `viewControllersIdentifiers` argument should include an array that represents the path of `ViewControllers` to the current screen.<br>
+To support more complex view hierarchies, you may also specify a screen URL in the second parameter and give the page a category.<br>
+
+For example:
+```swift
+ override func viewDidAppear(_ animated: Bool)
+    {
+        super.viewDidAppear(animated)
+        Optimove.sharedInstance.reportScreenVisit(viewControllersIdentifiers: ["main","cart"],
+	        url: URL(string:"http://my.bundle.id/main/cart/pre_checkout")!, // Optional
+	        category: "Shoes") // Optional
+    }
+```
+>Note: The `reportScreenVisit` method should only be called after the initialization success callback was received.
 
 ## Tracking Custom Events  
 
@@ -346,19 +265,20 @@ The protocol defines 2 properties:
 
 Then send that event through the `reportEvent(event:)` method of the `Optimove` singleton.
   
-````swift
+```swift
 override func viewDidAppear(_ animated: Bool) {
-super.viewDidAppear(animated)
-Optimove.sharedInstance.reportEvent(event: MyCustomEvent())
+	super.viewDidAppear(animated)
+	Optimove.sharedInstance.reportEvent(event: MyCustomEvent())
 }
-````
-
+```
+<br>
 
 >**Notes**:
+>- The `reportEvent(event:)` method should only be called after the initialization success callback was received.
 >- As already mentioned, all [custom events](https://github.com/optimove-tech/SDK-Custom-Events-for-Your-Vertical) must be pre-defined in your Tenant configurations by the Optimove Product Integration Team.
->- Reporting of custom events is only supported if you have the Mobile SDK implemented.
- >- Events use snake_case as a naming convention. Separate each word with one underscore character (_) and no spaces. (e.g., Checkout_Completed)
- >- The usage of the `reportEvent` function depends on your needs. This function may include a completion handler that will be called once the report has finished. The default value for this argument is nil.
+>- Reporting of custom events is only supported if you have the basic Mobile SDK setup implemented.
+>- Events use **snake_case** as a naming convention. Separate each word with one underscore character (_) and no spaces. (e.g., Checkout_Completed)
+
 
 # <a id="Trigger"></a>Trigger
 
@@ -377,9 +297,3 @@ You can also trigger Optimove realtime campaigns using Optimove’s APIs:
 * Register listener to receive realtime campaign notifications, please refer to RegisterEventListener (where eventid = 11)
 * To view your realtime API payload, please refer to [Optimove Realtime Execution Channels](https://docs.optimove.com/optimove-realtime-execution-channels/) (see Method 3: Realtime API) 
 For more information on how to acquire an API key to use Optimove APIs, please request one from your CSM or your Optimove point of contact.
-
-
-## <a id="trigger-optipush"></a>Executing via Optipush:
-Ability to execute campaigns using Optimove’s push notification add-on product, Optipush.
-_*Optipush*_ is Optimove’s mobile push notification delivery add-in module, powering all aspects of preparing, delivering and tracking mobile push notification communications to customers, seamlessly from within Optimove.<br>  _*Optimove SDK*_ for iOS includes built-in functionality for receiving push messages, presenting notifications in the app UI and tracking user responses.
-For instruction on setting up Optipush for iOS click [here](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS/O%20for%20iOS%20V1.2).
