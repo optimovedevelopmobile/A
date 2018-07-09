@@ -63,7 +63,8 @@ For a demo application containing the iOS SDK, please use our [iOS GitHub reposi
 ### 1. Install the SDK 
 In your Application Target Capabilities: 
 1. Enable `push notifications` capabilities <br>
-2. Enable`remote notifications` capabilities in`Background Modes`<br> 
+2. Enable`remote notifications` capabilities in`Background Modes`
+
 [![apple_dashboared.png](https://s9.postimg.cc/9ln5sfxe7/apple_dashboared.png)](https://postimg.org/image/itfe954gb/)
 
 
@@ -164,8 +165,8 @@ func application(_ application: UIApplication, didRegisterForRemoteNotifications
 
 // Called when a push message is received by the OS and forwarded to the app's process (used for Optimove analytical purposes)
 func application(_ application: UIApplication,
-didReceiveRemoteNotification userInfo: [AnyHashable : Any],
-fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void)
+		didReceiveRemoteNotification userInfo: [AnyHashable : Any],
+		fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void)
 {
 	// Forward the callback to the Optimove SDK 
 	if !Optimove.sharedInstance.didReceiveRemoteNotification(userInfo: userInfo,didComplete: completionHandler)
@@ -192,7 +193,7 @@ When the SDK has finished its initialization process, the callback `optimove(_:d
 You will also need to include the following steps to complete the basic setup:
 
  - Tracking User Activities and Events
- - [Stitching App Visitors to Registered Customer IDs](Stitching%20Visitors%20to%20Users)
+ - [Stitching App Visitors to Registered Customer IDs](https://github.com/optimove-tech/A/blob/master/i/V1.2/swift/README.md#stitching-app-visitors-to-registered-customer-ids)
 <br>
 
 
@@ -247,6 +248,8 @@ For example:
 ```
 >Note: The `reportScreenVisit` method should only be called after the initialization success callback was received.
 
+<br>
+
 ## Tracking Custom Events  
 
 Optimove clients may use the Optimove Mobile SDK to track specific customer actions and other custom events to Optimove (beyond OOTB events such visits). This data is used for tracking visitor and customer behavior, targeting campaigns to specific visitor and/or customer segments and triggering campaigns based on particular visitor and/or customer actions/events.  
@@ -260,8 +263,23 @@ To see examples of Custom Events, please visit [Defining the Set of Custom Track
 Once you and the Optimove Product Integration Team have together defined the custom events supported by your app, the Product Integration Team will implement your particular functions within your Optimove site, while you will be responsible for implementing the `OptimoveEvent` protocol of the individual events within your app using the appropriate function calls.<br>
 
 The protocol defines 2 properties:
-1.	**name: String** – Declares the custom event’s name
-2.	**parameters: [String:Any]** – Defines the custom event's parameters.
+1.	`name: String` – Declares the custom event’s name
+2.	`parameters: [String:Any]` – Defines the custom event's parameters.
+
+Custom Event example:
+```swift
+class MyCustomEvent: OptimoveEvent
+{
+    var name: String
+    var parameters: [String:Any]
+    
+    init(name: String, parameters: [String:Any])
+    {
+        self.name = name
+        self.parameters = parameters
+    }
+}
+```
 
 Then send that event through the `reportEvent(event:)` method of the `Optimove` singleton.
   
