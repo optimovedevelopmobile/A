@@ -9,6 +9,7 @@
 -   [Trigger](#Trigger)
  	- [Executing via Optimail](#trigger-optimail)
 	- [Executing via Optimove APIs](#trigger-api)
+	- [Executing via Optipush](trigger-optipush)
 <br>
 
 # <a id="Introduction"></a> Introduction
@@ -31,10 +32,9 @@ To get started, please follow these instructions:
 ### 1. Pre-requisites <br>
 
 1. You have a paid development account for your iOS app, and valid certificates for remote notifications or APN Auth key.
-
 2. The app's Deployment Target is at least iOS 10.0
-3. Cocoapods version 1.5 and above
-4. Optimove SDK is dependent on Firebase version 5.4.0
+3. Your Cocoapods version is 1.5 or above
+4. You have a Firebase version of 5.4.0 (Optimove SDK is dependent on Firebase version 5.4.0)
 
 
 ### 2. Provide your iOS app details: <br>
@@ -64,27 +64,22 @@ For a demo application containing the iOS SDK, please use our [iOS GitHub reposi
 
 ### 1. Install the SDK 
 In your Application Target Capabilities: 
-	1. Enable `push notifications` capabilities 
-	2. Enable`remote notifications` capabilities in`Background Modes`
-
+1. Enable `push notifications` capabilities 
+2. Enable`remote notifications` capabilities in`Background Modes`
  
 [![apple_dashboared.png](https://s9.postimg.cc/9ln5sfxe7/apple_dashboared.png)](https://postimg.org/image/itfe954gb/)
 
-----
-### Optipush configuration
-1.  In application target capabilities -> App Groups - add the following group using the naming convention:
-	group.[*your Bundle Id*].optimove
-2. Add **Notification Service Extension** to your project under Targets
-3. Under Notification service extension capabilities -> App Groups, select the group you created in #1.
-------
 
+### 2. If you are using Optipush, see additional configurations [here](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS/O%20for%20iOS%20V1.2#2-optipush-configuration) 
+
+### 3.  Download OptimoveSDK pod
 In order to work with the Optimove SDK for your iOS native app, need to download its module from CocoaPods.
 
 1. In your Podfile, add the following:
 
 `pod OptimoveSDK`
 
-If you are using Optipush, add the folllowing under the extension target:
+If you are using Optipush, add the following under the extension target:
 
   `pod 'OptimoveNotificationServiceExtension`'
 
@@ -221,11 +216,9 @@ override func didReceive(_ request: UNNotificationRequest, withContentHandler co
 In your _`AppDelegate`_ class, inside the application
 
   
-
 _`application (_: didFinishLaunchingWithOptions:)`_ method, create a new `OptimoveTenantInfo` object. This object should contain:
 
   
-
 1. The end-point URL
 
 2. Unique Optimove token
@@ -348,8 +341,7 @@ if !Optimove.sharedInstance.didReceiveRemoteNotification(userInfo: userInfo,didC
 
 completionHandler(.newData)
 
-}
-
+	}
 }
 
 func userNotificationCenter(_ center: UNUserNotificationCenter,
@@ -364,8 +356,7 @@ if !Optimove.sharedInstance.didReceive(response: response,withCompletionHandler:
 
 completionHandler()
 
-}
-
+	}
 }
 
 func userNotificationCenter(_ center: UNUserNotificationCenter,
@@ -380,33 +371,43 @@ if !Optimove.sharedInstance.willPresent(notification: notification, withCompleti
 
 completionHandler(.alert)
 
+	}
 }
-
-}
-
 ```
 
 All of `Optimove` methods (except the `didRegisterForRemoteNotificationsWithDeviceToken` ) return a boolean value that indicate if the received notification should be handled by `OptimoveSDK` or it is part of the application services and should be handle by you.
 
   
 
-## Important Installation and Usage Notes
+### 3. Important Installation and Usage Notes
 
 The SDK initialization process occurs asynchronously, off the `Main Thread`.
 
 Before calling the Public API methods, make sure that the SDK has finished initialization by calling the `registerSuccessStateListener(listener:)` method with an instance of _`OptimoveSuccessStateListener`_.
-
   
 
 When the SDK finished its initializtion process, it'll call the callback `optimove(_:didBecomeActiveWithMissingPermissions:) ` and provide the missing permission that the SDK must have in order to work properly.
 
+### 4. Tracking Visitor and Customer activity
+ 
+You will also need to include the following steps to complete the basic setup:
+
+ - Tracking User Activities and Events
+ - [Stitching App Visitors to Registered Customer IDs](Stitching%20Visitors%20to%20Users)
+<br>
+
+
+# <a id="Advanced Setup"></a>Advanced Setup
+Use the Advanced Setup (optional) in order to track visitor and customer customized actions and events.
+As described in [Tracking Custom Events](https://github.com/optimove-tech/SDK-Custom-Events-for-Your-Vertical), this step requires collaboration between you and Optimove’s Product Integration Team. Please contact your Optimove Customer Success Manager (CSM) or Optimove point of contact to schedule a meeting with the Product Integration team.
+
+>**Note**: You can deploy the basic setup, followed by adding the advanced setup at a later stage. The Basic Setup is a pre-requisite.
+
+<br>
   
+# <a id="Track"></a>Track
 
-## Analytics
-
-  
-
-#### set user id
+## <a id="Stitching Visitors to Users"></a>Stitching App Visitors to Registered Customer IDs
 
 Once the user has downloaded the application and the _Optimove SDK_ run for the first time, the user is considered a _Visitor_, i.e. an unidentified person.<br>
 
@@ -415,10 +416,9 @@ Once the user authenticates and becomes identified by a known `PublicCustomerId`
 As soon as this happens for each individual user, pass the `CustomerId` to the `Optimove` singleton like this: <br>
 
 ```swift
-
 Optimove.sharedInstance.set(userId:)
-
 ```
+
 >**Notes:** 
 >
  >- The `CustomerId` is usually provided by the server application that manages customers, and is the same ID provided to Optimove during the daily customer data transfer. 
@@ -427,56 +427,43 @@ Optimove.sharedInstance.set(userId:)
  
 <br>
 
-### Report Screen Event
-
+## <a id="Tracking a Screen Visit"></a>Tracking Screen Visits
 To track which screens the user has visited in your app, send a _setScreenEvent_ message to the shared Optimove instance:.<br>
 
   
-
 ````swift
-
 Optimove.sharedInstance.reportScreenVisit(viewControllersIdentifiers:url)
-
 ````
 
 The _`viewControllersIdentifiers`_ argument should include an array that represents the path to the current screen.<br>
 
 To support more complex view hierarchies, you may also specify a screen URL in the second parameter.<br>
 
-  
-  
+## Tracking Custom Events  
 
-### Report Custom Event
+Optimove clients may use the Optimove Mobile SDK to track specific customer actions and other custom events to Optimove (beyond OOTB events such visits). This data is used for tracking visitor and customer behavior, targeting campaigns to specific visitor and/or customer segments and triggering campaigns based on particular visitor and/or customer actions/events.  
+  
+To see examples of Custom Events, please visit [Defining the Set of Custom Tracking Events](https://github.com/optimove-tech/SDK-Custom-Events-for-Your-Vertical) that you will report for more information.
 
-To report a _**`Custom Event`**_ (one defined by you and the Optimove Integration Team and already configured in your Optimove site), you must implement the `OptimoveEvent` protocol.<br>
+>**Note**: While you can always add/change the custom events and parameters at a later date (by speaking with the Optimove Product Integration Team), only the particular custom events that you and the Optimove Product Integration Team have already defined together will be supported by your Optimove site.
+
+### How to Track a Custom Event from within your iOS app
+
+Once you and the Optimove Product Integration Team have together defined the custom events supported by your app, the Product Integration Team will implement your particular functions within your Optimove site, while you will be responsible for implementing the `OptimoveEvent` protocol of the individual events within your app using the appropriate function calls.<br>
 
 The protocol defines 2 properties:
-
-1. `name: String` - Declares the custom event's name
-
-2. `parameters: [String:Any]` - Defines the custom event's parameters.<br>
+1.	**name: String** – Declares the custom event’s name
+2.	**parameters: [String:Any]** – Defines the custom event's parameters.
 
 Then send that event through the `reportEvent(event:)` method of the `Optimove` singleton.
-
   
-
 ````swift
-
 override func viewDidAppear(_ animated: Bool) {
-
 super.viewDidAppear(animated)
-
 Optimove.sharedInstance.reportEvent(event: MyCustomEvent())
-
 }
-
 ````
 
->Note:<br>
-
-* All _**`Custom Event`**_ must be declared in the _Tenant Configurations_. <br>
-
-* _**`Custom Event`**_ reporting is only supported when OptiTrack Feature is enabled.<br>
 
 >**Notes**:
 >- As already mentioned, all [custom events](https://github.com/optimove-tech/SDK-Custom-Events-for-Your-Vertical) must be pre-defined in your Tenant configurations by the Optimove Product Integration Team.
@@ -484,115 +471,28 @@ Optimove.sharedInstance.reportEvent(event: MyCustomEvent())
  >- Events use snake_case as a naming convention. Separate each word with one underscore character (_) and no spaces. (e.g., Checkout_Completed)
  >- The usage of the `reportEvent` function depends on your needs. This function may include a completion handler that will be called once the report has finished. The default value for this argument is nil.
 
-## Optipush:
+# <a id="Trigger"></a>Trigger
 
+## <a id="trigger-optimail"></a>Executing via Optimail
+Ability to execute campaigns using Optimove’s Optimail email service provider (ESP) add-on product. With Optimail you will be able to:
+* Send HTML email campaigns
+* Set personalized tags (first name, last name, and more)
+* These Tags are retrieved from both your daily data transfer, as well as the SDK events you are tracking.
+* Preview campaign email before sending
+* Send realtime marketing campaigns based on your website SDK activity triggering rules
+
+For more information on how to add Optimail to your account, please contact your CSM or your Optimove point of contact.
+
+## <a id="trigger-api"></a>Executing via Optimove APIs
+You can also trigger Optimove realtime campaigns using Optimove’s APIs:
+* Register listener to receive realtime campaign notifications, please refer to RegisterEventListener (where eventid = 11)
+* To view your realtime API payload, please refer to [Optimove Realtime Execution Channels](https://docs.optimove.com/optimove-realtime-execution-channels/) (see Method 3: Realtime API) 
+For more information on how to acquire an API key to use Optimove APIs, please request one from your CSM or your Optimove point of contact.
+
+
+## <a id="trigger-optipush"></a>Executing via Optipush:
+Ability to execute campaigns using Optimove’s push notification add-on product, Optipush.
 _*Optipush*_ is Optimove’s mobile push notification delivery add-in module, powering all aspects of preparing, delivering and tracking mobile push notification communications to customers, seamlessly from within Optimove.<br>  _*Optimove SDK*_ for iOS includes built-in functionality for receiving push messages, presenting notifications in the app UI and tracking user responses.
-
-All of `OptimoveSDK` method for notification should be implemented in the setup steps.
-
-###Notification Extension
-
-.
-
-.
-
-.
-
-..
-
-  
+For instruction on setting up Optipush for iOS click [here](https://github.com/optimove-tech/A/tree/master/O/O%20for%20iOS/O%20for%20iOS%20V1.2).
 
 
-  
-
-## Deep Link:
-
-  
-
-Other than _UI attributes_, an **_Optipush Notification_** can contain metadata linking to a specific screen within your application, along with custom (screen specific) data.<br>
-
-  
-
-To support deep linking, you should:
-
-  
-
-* Enable Associated Domains:
-
-In your project capabilities, add the dynamic link domain with `applinks:` prefix and without any `https://` prefix
-
-  
-
-![associated_domain.png](https://s9.postimg.cc/hqrw4eqm7/associated_domain.png)
-
-<br>
-
-Any _`ViewControler`_ should recieve DynamicLink data callback, should implement _`didReceive(dynamicLink:)`_, thus conforming to _`OptimoveDeepLinkCallback`_ protocol .<br>
-
-_`OptimoveDeepLinkCallback`_ protocol has one method:
-
-````swift
-
-didReceive(deepLink:)
-
-````
-
-that receives an `OptimoveDeepLinkComponents` as argument
-
-  
-
-A `OptimoveDeepLinkComponents` entity contains two properties:
-
-  
-
-· ScreenName: for the required _*viewcontroller*_ you need to segue to.
-
-  
-
-· Query: That contain the content that should be included in that view controller.
-
-  
-
-example:
-
-````swift
-
-func didReceive(deepLink: OptimoveDeepLinkComponents?)
-
-{
-
-let vc = self.storyboard!.instantiateViewController(withIdentifier: deepLink!.screenName)
-
-self.navigationController?.pushViewController(vc, animated: true)
-
-}
-
-````
-
-  
-
-### Test Optipush Templates
-
-t is usually desirable to test an **_Optipush Template_** on an actual device before sending an **_Optipush Campaign_** to users.<br>
-
-To enable _"test campaigns"_ on one or more devices, call the _**`Optimove.sharedInstance.startTestMode()`**_ method.<br>
-
-To stop receiving _"test campaigns"_ call _**`Optimove.sharedInstance.stopTestMode()`**_.<br>
-
-  
-
-````swift
-
-class ViewController: UIViewController {
-
-override func viewDidAppear(_ animated: Bool) {
-
-super.viewDidAppear(animated)
-
-Optimove.sharedInstance.startTestMode()
-
-}
-
-}
-
-````
