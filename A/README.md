@@ -38,9 +38,9 @@ The _Optimove Android SDK_ is dependent upon the _Firebase Android SDK_.
 If your application already uses **_Firebase SDK_** or has a dependency with **_Firebase SDK_**, a build conflict might occur, and even **Runtime Exception**, due to backwards compatibility issues.<br>
 Therefore, it is highly recommended to match the application's **_Firebase SDK version_** to Optimove's **_Firebase SDK version_** as detailed in the following table.
 
-| Optimove SDK Version | Firebase SDK Version |
-| -------------------- | -------------------- |
-| 1.1.0                | 11.8.0               |
+| Optimove SDK Version | Firebase Core SDK Version | Firebase Database SDK Version | Firebase Messaging SDK Version | Firebase Invites SDK Version | Firebase Job Dispatcher SDK Version |
+| -------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- | ------------------------- |
+| 1.2.0                | 16.0.1                    | 16.0.1                    | 17.1.0                    | 16.0.1                    | 0.8.5                   |
 
 
 <br>
@@ -133,8 +133,8 @@ public class MyApplication extends Application {
 **1. Working with multiple Firebase messaging services** (Hosting  application uses Firebase)
 
 #### Multiple FirebaseMessagingServices:
-When the hosting app also utilizes Firebase Cloud Messaging and implements the **_`FirebaseMessagingService`_** Android's **_Service Priority_** kicks in, and Optimove SDK's own **_`FirebaseMessagingService`_** is never called. For that reason, the hosting app **must** call explicitly Optimove's `onMessageReceived` callback.<br>
-The `onMessageReceived` method returns *`true`* if the push message was intended for the **Optimove SDK**
+When the hosting app also utilizes Firebase Cloud Messaging and implements the **_`FirebaseMessagingService`_** Android's **_Service Priority_** kicks in, and Optimove SDK's own **_`FirebaseMessagingService`_** is never called. For that reason, the hosting app **must** call explicitly Optimove's `onMessageReceived` and `onTokenRefresh` callbacks.<br>
+The `onMessageReceived` method returns *`true`* if the push message was intended for the **Optimove SDK**.
 
 ```java
 public class MyMessagingService extends FirebaseMessagingService {
@@ -149,11 +149,21 @@ public class MyMessagingService extends FirebaseMessagingService {
       }
       // The notification was meant for the App, perform your push logic here
     }
+    
+    @Override
+    public void onNewToken(String s) {
+      super.onNewToken(s);
+      // Forward the call to the Optimove SDK
+      new FcmTokenHandler().onTokenRefresh();
+      // Continue with the application logic
+    }
 }
 ```
 <br>
 
 ####  Multiple FirebaseInstanceIdService
+> This functionality has been deprecated by Firebase in version 16 of the SDK. If not already removed from your app, please remove the call to the Optimove SDK from this callback.
+
 When the hosting app implements the **_`FirebaseInstanceIdService`_** Android's **_Service Priority_** kicks in, and Optimove SDK's own **_`FirebaseInstanceIdService`_** is never called. For that reason, the hosting app **must** call explicitly Optimove's `onTokenRefresh` callback.
 
 ```java
@@ -250,7 +260,14 @@ Once the user has downloaded the application and the *OptimoveSDK* for Android h
 Once the user authenticates and becomes identified by a known `PublicCustomerId`, then the user is considered a *customer*. As soon as this happens for each individual user, call the `SetUserId` function to pass the `CustomerId` to the Optimove singleton:
 
 ```java
+// Call to notify the SDK that the user has a known PublicCustomerId
 Optimove.getInstance().setUserId("a-unique-user-id");
+
+// Call to notify the SDK that the user has a known email address. Can be called regardless of the "setUserId" call.
+Optimove.getInstance().setUserEmail("a.valid@email.com");
+
+// Convenience method to call both "setUserId" and "setEmail" simultaneously.
+Optimove.getInstance().registerUser("a-unique-user-id", "a.valid@email.com");
 ```
        
 >**Note:** 
